@@ -9,3 +9,5 @@ so = love.sound
 au = love.audio
 
 require "math"
+
+mo.setVisible(false)

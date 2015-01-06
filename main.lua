@@ -48,7 +48,7 @@ function love.draw()
 	 drawTile(tile.tile, tile.x, tile.y)
       end
    end
-   gr.print("Tile: " .. index - 1, 10, 10)
+   gr.print("Tile: " .. index, 10, 10)
 end
 
 function drawTile(tile, x, y)
@@ -61,14 +61,26 @@ function drawTile(tile, x, y)
    end
 
    if even(y) then
-      gr.draw(tile, x * 128, y * 32)
+      x = x * 128
+      y = y * 32
    else
-      gr.draw(tile, (x * 128) + 64, y * 32)
+      x = (x * 128) + 64
+      y = y * 32
    end
+   y = y - (tile:getHeight() - 133)
+   gr.draw(tile, x, y)
 end
 
 function love.keypressed(key)
-   love.event.push("quit")
+   if key == "escape" then
+      love.event.push("quit")
+      elseif key == '1' then
+	 index = 1
+   elseif key == '+' then
+      index = index + 1
+   elseif key == "-" then
+      index = index - 1
+   end
 end
 
 function love.mousepressed(x, y, button)
