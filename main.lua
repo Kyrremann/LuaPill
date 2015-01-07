@@ -49,20 +49,29 @@ end
 
 function love.draw()
    gr.push()
-   -- gr.translate(CAMERA.x, CAMERA.y)
+   gr.translate(CAMERA.x, CAMERA.y)
    for y, vy in ipairs(MAP) do
       for x, tile in ipairs(vy) do
 	 drawTile(tile.tile, tile.x, tile.y)
       end
    end
    gr.pop()
+
+   -- debug data
+   local moX = math.floor(mo.getX() / 128)
+   local moY = math.floor(mo.getY() / 32)
+   gr.print("(" .. mo.getX() .. "," .. mo.getY() .. ")", 10, 45)
+   gr.print("(" .. mo.getX() / 128 .. "," .. mo.getY() / 32 .. ")", 10, 65)
+   gr.print("(" .. moX .. "," .. moY .. ")", 10, 85)
+
    gr.print("Tile: " .. index, 10, 10)
    gr.print("Scale: " .. TILESCALE, 10, 25)
 end
 
 function drawTile(tile, x, y)
-   local moX = math.floor(mo.getX() / 128)
-   local moY = math.floor(mo.getY() / 32)
+   local moX = math.floor((mo.getX() / TILESCALE) / 128)
+   local moY = math.floor((mo.getY() / TILESCALE) / 32)
+   
    if moX == x and moY == y then
       tile = TILES[index]
    elseif not tile then
@@ -113,8 +122,8 @@ end
 
 function love.mousepressed(x, y, button)
    if button == "l" then
-      local moX = math.floor(mo.getX() / 128)
-      local moY = math.floor(mo.getY() / 32)
+      local moX = math.floor((mo.getX() / TILESCALE) / 128)
+      local moY = math.floor((mo.getY() / TILESCALE) / 32)
       MAP[moY][moX] = createTile(TILES[index], moX, moY)
    elseif button == "r" then
       rotateIndex = rotateIndex + 1
