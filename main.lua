@@ -3,6 +3,20 @@ function love.load()
    
    -- A tile = 133 x 99
    TILES = {}
+   MAP = {}
+   SCALEMODE = false
+   SCROLLMODE = false
+   TILESCALE = 1
+
+   index = 1
+   scrollIndex = 0
+   rotateIndex = 0
+
+   initTiles()
+   initMap()
+end
+
+function initTiles()
    local function formatId(n)
       if n < 10 then
 	 return "00" .. n
@@ -13,14 +27,8 @@ function love.load()
    end
 
    for i=0, 127 do
-      table.insert(TILES, gr.newImage("images/landscapeTiles_" .. formatId(i) .. ".png"))
+      TILES[#TILES + 1] = gr.newImage("images/landscapeTiles_" .. formatId(i) .. ".png")
    end
-   index = 1
-   scrollIndex = 0
-   rotateIndex = 0
-
-   MAP = {}
-   initMap()
 end
 
 function initMap()
@@ -36,19 +44,13 @@ function love.update(dt)
 end
 
 function love.draw()
---[[   
-   for y=0, 10 do
-      for x=0, 4 do
-	 drawTile(TILES[2], x, y)
-      end
-   end
-]]
    for y, vy in ipairs(MAP) do
       for x, tile in ipairs(vy) do
 	 drawTile(tile.tile, tile.x, tile.y)
       end
    end
    gr.print("Tile: " .. index, 10, 10)
+   gr.print("Scale: " .. TILESCALE, 10, 25)
 end
 
 function drawTile(tile, x, y)
@@ -56,30 +58,41 @@ function drawTile(tile, x, y)
    local moY = math.floor(mo.getY() / 32)
    if moX == x and moY == y then
       tile = TILES[index]
-   elseif tile == nil then
+   elseif not tile then
       tile = TILES[73]
    end
 
-   if even(y) then
-      x = x * 128
-      y = y * 32
-   else
-      x = (x * 128) + 64
-      y = y * 32
+   x = x * 128
+   if odd(y) then
+      x = x + 64
    end
+   y = y * 32
+
    y = y - (tile:getHeight() - 133)
-   gr.draw(tile, x, y)
+   gr.draw(tile, -- drawable
+      x * TILESCALE, y * TILESCALE, -- cords
+      0, -- rotation
+      TILESCALE, TILESCALE -- scale
+   )
 end
 
 function love.keypressed(key)
    if key == "escape" then
       love.event.push("quit")
-      elseif key == '1' then
-	 index = 1
+   elseif key == '1' then
+      index = 1
    elseif key == '+' then
       index = index + 1
    elseif key == "-" then
       index = index - 1
+   elseif key == "lshift" then
+      SCALEMODE = true
+   end
+end
+
+function love.keyreleased(key)
+   if key == "lshift" then
+      SCALEMODE = false
    end
 end
 
@@ -94,12 +107,19 @@ function love.mousepressed(x, y, button)
 	 rotateIndex = 1
       end
    elseif button == "wu" then
-      scrollIndex = scrollIndex + 4
+      if SCALEMODE then
+	 TILESCALE = TILESCALE + .2
+      else 
+	 index = index + 1
+      end
    elseif button == "wd" then
-      scrollIndex = scrollIndex - 4
+      if SCALEMODE then
+	 TILESCALE = TILESCALE - .2
+      else
+	 index = index - 1
+      end
    end
 
-   index = scrollIndex + rotateIndex
    if index < 1 then
       index = #TILES
    elseif index > #TILES then
@@ -113,6 +133,10 @@ function createTile(tile, x, y)
       x = x,
       y = y
    }
+end
+
+function odd(n)
+   return not even(n)
 end
 
 function even(n)
