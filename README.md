@@ -10,3 +10,7 @@ I'm testing out Kenney.nl isometric tiles
  * You can also use + and -
  * 1 takes you to the first tile
 * Escape to quit
+
+## TODO
+* Add sidebar that show the current tile and what is before and after
+* Scrolling of the map

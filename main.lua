@@ -7,6 +7,10 @@ function love.load()
    SCALEMODE = false
    SCROLLMODE = false
    TILESCALE = 1
+   CAMERA = {
+      x = 0,
+      y = 0
+   }
 
    index = 1
    scrollIndex = 0
@@ -44,11 +48,14 @@ function love.update(dt)
 end
 
 function love.draw()
+   gr.push()
+   -- gr.translate(CAMERA.x, CAMERA.y)
    for y, vy in ipairs(MAP) do
       for x, tile in ipairs(vy) do
 	 drawTile(tile.tile, tile.x, tile.y)
       end
    end
+   gr.pop()
    gr.print("Tile: " .. index, 10, 10)
    gr.print("Scale: " .. TILESCALE, 10, 25)
 end
@@ -87,6 +94,14 @@ function love.keypressed(key)
       index = index - 1
    elseif key == "lshift" then
       SCALEMODE = true
+   elseif key == "w" then
+      CAMERA.y = CAMERA.y + 10
+   elseif key == "s" then
+      CAMERA.y = CAMERA.y - 10
+   elseif key == "a" then
+      CAMERA.x = CAMERA.x + 10
+   elseif key == "d" then
+      CAMERA.x = CAMERA.x - 10
    end
 end
 

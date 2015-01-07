@@ -10,4 +10,5 @@ au = love.audio
 
 require "math"
 
+ke.setKeyRepeat(.01, .01)
 mo.setVisible(false)
