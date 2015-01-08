@@ -1,7 +1,6 @@
 function love.load()
    require "setup"
    
-   -- A tile = 133 x 99
    TILES = {}
    MAP = {}
    SCALEMODE = false
@@ -11,8 +10,8 @@ function love.load()
       x = gr.getWidth() / 2,
       y = 0
    }
-   TILE_WIDTH_HALF = 64  -- 132 / 2
-   TILE_HEIGHT_HALF = 32 -- 66 / 2
+   TILE_WIDTH_HALF = 64  -- 128 / 2
+   TILE_HEIGHT_HALF = 32 -- 64 / 2
 
    index = 1
    scrollIndex = 0
@@ -41,7 +40,7 @@ function initMap()
    for y=1, 30 do
       MAP[y] = {}
       for x=1, 30 do
-	 MAP[y][x] = createTile(TILES[74], x, y)
+	 MAP[y][x] = createTile(TILES[74], { x = x, y = y })
       end
    end
 end
@@ -51,27 +50,18 @@ end
 
 function love.draw()
    local screen = {}
-   local map = screenToMap({ x = mo.getX(), y = mo.getY() })
-   gr.print(map.x .. "," .. map.y, 10, 45)
+   local map = getMouseAsMap()
    gr.push()
    gr.translate(CAMERA.x, CAMERA.y)
    for y, vy in ipairs(MAP) do
       for x, shape in ipairs(vy) do
 	 local tile = shape.tile
-	 screen = mapToScreen({ x = x, y = y })
-	 -- gr.draw(TILES[74], screen.x, screen.y)
 	 if map.x == x and map.y == y then
 	    tile = TILES[index]
 	 elseif not tile then
 	    tile = TILES[74]
 	 end
-
-	 gr.draw(tile, -- drawable
-	    screen.x * TILESCALE, screen.y * TILESCALE, -- cords
-	    0, -- rotation
-	    TILESCALE, TILESCALE -- scale
-	 )
-	 -- drawTile(tile.tile, tile.x, tile.y)
+	 drawTile(tile, shape.map)
       end
    end
    gr.pop()
@@ -80,25 +70,11 @@ function love.draw()
    gr.print("Scale: " .. TILESCALE, 10, 25)
 end
 
-function drawTile(tile, x, y)
-   local moX = math.floor((mo.getX() / TILESCALE) / 128)
-   local moY = math.floor((mo.getY() / TILESCALE) / 32)
-   
-   if moX == x and moY == y then
-      tile = TILES[index]
-   elseif not tile then
-      tile = TILES[73]
-   end
-
-   x = x * 128
-   if odd(y) then
-      x = x + 64
-   end
-   y = y * 32
-
-   y = y - (tile:getHeight() - 133)
+function drawTile(tile, map)
+   screen = mapToScreen(map)
+   screen.y = screen.y - (tile:getHeight() - 83)
    gr.draw(tile, -- drawable
-      x * TILESCALE, y * TILESCALE, -- cords
+      screen.x * TILESCALE, screen.y * TILESCALE, -- cords
       0, -- rotation
       TILESCALE, TILESCALE -- scale
    )
@@ -110,9 +86,17 @@ function love.keypressed(key)
    elseif key == '1' then
       index = 1
    elseif key == '+' then
-      index = index + 1
+      if SCALEMODE then
+	 TILESCALE = TILESCALE + .2
+      else
+	 index = index + 1
+      end
    elseif key == "-" then
-      index = index - 1
+      if SCALEMODE then
+	 TILESCALE = TILESCALE - .2
+      else
+	 index = index - 1
+      end
    elseif key == "lshift" then
       SCALEMODE = true
    elseif key == "w" then
@@ -124,6 +108,9 @@ function love.keypressed(key)
    elseif key == "d" then
       CAMERA.x = CAMERA.x - 10
    end
+
+   validateIndex()
+   validateTileScale()
 end
 
 function love.keyreleased(key)
@@ -134,9 +121,8 @@ end
 
 function love.mousepressed(x, y, button)
    if button == "l" then
-      local moX = math.floor((mo.getX() / TILESCALE) / 128)
-      local moY = math.floor((mo.getY() / TILESCALE) / 32)
-      MAP[moY][moX] = createTile(TILES[index], moX, moY)
+      local map = getMouseAsMap()
+      MAP[map.y][map.x] = createTile(TILES[index], map)
    elseif button == "r" then
       rotateIndex = rotateIndex + 1
       if rotateIndex > 4 then
@@ -145,7 +131,7 @@ function love.mousepressed(x, y, button)
    elseif button == "wu" then
       if SCALEMODE then
 	 TILESCALE = TILESCALE + .2
-      else 
+      else
 	 index = index + 1
       end
    elseif button == "wd" then
@@ -156,6 +142,19 @@ function love.mousepressed(x, y, button)
       end
    end
 
+   validateIndex()
+   validateTileScale()
+end
+
+function validateTileScale()
+   if TILESCALE < .2 then
+      TILESCALE = .2
+   elseif TILESCALE > 2 then
+      TILESCALE = 2
+   end
+end
+
+function validateIndex()
    if index < 1 then
       index = #TILES
    elseif index > #TILES then
@@ -163,26 +162,33 @@ function love.mousepressed(x, y, button)
    end
 end
 
-function createTile(tile, x, y)
+function createTile(tile, map)
    return {
       tile = tile,
-      x = x,
-      y = y
+      x = map.x,
+      y = map.y,
+      map = map
    }
 end
 
 function mapToScreen(map)
    local screen = {}
-   screen.x = (map.x - map.y) * TILE_WIDTH_HALF;
+   screen.x = (map.x - map.y) * TILE_WIDTH_HALF
    screen.y = (map.x + map.y) * TILE_HEIGHT_HALF
    return screen
 end
 
 function screenToMap(screen)
    local map = {}
-   map.x = math.floor((screen.x / TILE_WIDTH_HALF + screen.y / TILE_HEIGHT_HALF) / 2)
-   map.y = math.floor((screen.y / TILE_HEIGHT_HALF -(screen.x / TILE_WIDTH_HALF)) / 2)
+   screen.x = (screen.x - CAMERA.x) / TILESCALE
+   screen.y = (screen.y - CAMERA.y) / TILESCALE
+   map.x = math.floor(math.floor(screen.x / TILE_WIDTH_HALF + screen.y / TILE_HEIGHT_HALF) / 2)
+   map.y = math.floor(math.floor(screen.y / TILE_HEIGHT_HALF -(screen.x / TILE_WIDTH_HALF)) / 2)
    return map
+end
+
+function getMouseAsMap()
+   return screenToMap({ x = mo.getX(), y = mo.getY() })
 end
 
 function odd(n)
