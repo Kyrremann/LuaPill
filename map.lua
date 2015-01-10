@@ -8,7 +8,7 @@ local FOLDER = nil
 local SORT_FOLDER = false
 local DEFAULT_TILE = nil
 local CAMERA = {
-   x = gr.getWidth() / 2,
+   x = love.graphics.getWidth() / 2,
    y = 0
 }
 local TILE_WIDTH_HALF = nil
@@ -21,7 +21,8 @@ local rotateIndex = 0
 local function drawTile(tile, map)
    screen = isoengine:mapToScreen(map)
    screen.y = screen.y - (tile:getHeight() - 83)
-   gr.draw(tile, -- drawable
+
+   love.graphics.draw(tile, -- drawable
       screen.x * TILESCALE, screen.y * TILESCALE, -- cords
       0, -- rotation
       TILESCALE, TILESCALE -- scale
@@ -31,20 +32,22 @@ end
 function isoengine:draw()
    local screen = {}
    local map = isoengine:getMouseAsMap()
-   gr.push()
-   gr.translate(CAMERA.x, CAMERA.y)
+   love.graphics.push()
+   love.graphics.translate(CAMERA.x, CAMERA.y)
    for y, vy in ipairs(MAP) do
       for x, shape in ipairs(vy) do
 	 local tile = shape.tile
-	 if map.x == x and map.y == y then
-	    tile = TILES[index]
-	 elseif not tile then
+	 if not tile then
 	    tile = TILES[202]
 	 end
 	 drawTile(tile, shape.map)
+	 
+	 if map.x == x and map.y == y then
+	    drawTile(TILES[index], map)
+	 end
       end
    end
-   gr.pop()
+   love.graphics.pop()
 end
 
 function isoengine:mapToScreen(map)
@@ -167,7 +170,7 @@ local function initTiles()
 
    local files = love.filesystem.getDirectoryItems(FOLDER)
    for k, file in ipairs(files) do
-      table.insert(TILES, gr.newImage(FOLDER .. "/" .. file))
+      table.insert(TILES, love.graphics.newImage(FOLDER .. "/" .. file))
    end
    if SORT_FOLDER then
       table.sort(TILES)
@@ -184,6 +187,17 @@ local function initMap(width, height)
       for x=1, width do
 	 MAP[y][x] = createTile(TILES[DEFAULT_TILE], { x = x, y = y })
       end
+   end
+end
+
+function isoengine:saveMap()
+end
+
+function isoengine:loadMap(path)
+   if love.filesystem.isFile(path) then
+      
+   else
+      print("No such file with path: " .. path)
    end
 end
 
