@@ -4,12 +4,15 @@ local MAP = {}
 local SCALEMODE = false
 local SCROLLMODE = false
 local TILESCALE = 1
+local FOLDER = nil
+local SORT_FOLDER = false
+local DEFAULT_TILE = nil
 local CAMERA = {
    x = gr.getWidth() / 2,
    y = 0
 }
-local TILE_WIDTH_HALF = 64  -- 128 / 2
-local TILE_HEIGHT_HALF = 32 -- 64 / 2
+local TILE_WIDTH_HALF = nil
+local TILE_HEIGHT_HALF = nil
 
 local index = 1
 local scrollIndex = 0
@@ -36,7 +39,7 @@ function isoengine:draw()
 	 if map.x == x and map.y == y then
 	    tile = TILES[index]
 	 elseif not tile then
-	    tile = TILES[74]
+	    tile = TILES[202]
 	 end
 	 drawTile(tile, shape.map)
       end
@@ -162,8 +165,16 @@ local function initTiles()
       return n
    end
 
-   for i=0, 127 do
-      TILES[#TILES + 1] = gr.newImage("images/landscapeTiles_" .. formatId(i) .. ".png")
+   local files = love.filesystem.getDirectoryItems(FOLDER)
+   for k, file in ipairs(files) do
+      table.insert(TILES, gr.newImage(FOLDER .. "/" .. file))
+   end
+   if SORT_FOLDER then
+      table.sort(TILES)
+   end
+
+   if not DEFAULT_TILE then
+      DEFAULT_TILE = #TILES
    end
 end
 
@@ -171,13 +182,17 @@ local function initMap(width, height)
    for y=1, height do
       MAP[y] = {}
       for x=1, width do
-	 MAP[y][x] = createTile(TILES[74], { x = x, y = y })
+	 MAP[y][x] = createTile(TILES[DEFAULT_TILE], { x = x, y = y })
       end
    end
 end
 
 function isoengine:getTile(index)
    return TILES[index]
+end
+
+function isoengine:getTileCount()
+   return #TILES
 end
 
 function isoengine:getScale()
@@ -189,6 +204,12 @@ function isoengine:getTileIndex()
 end
 
 function isoengine:setup(config)
+   TILE_WIDTH_HALF = config.TILEWIDTH / 2
+   TILE_HEIGHT_HALF = config.TILEHEIGHT / 2
+   FOLDER = config.folder
+   SORT_FOLDER = config.sortFolder
+   DEFAULT_TILE = config.defaultTile or nil
+
    initTiles()
    initMap(30, 30)
 end

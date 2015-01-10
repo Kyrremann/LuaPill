@@ -2,7 +2,14 @@ function love.load()
    require "setup"
    
    map = require "map"
-   map:setup()
+   config = {
+      TILEWIDTH = 128,
+      TILEHEIGHT = 64,
+      folder = "images",
+      sortFolder = false,
+      defaultTile = 202
+   }
+   map:setup(config)
 end
 
 function love.update(dt)
@@ -34,11 +41,12 @@ function drawSidebar()
       index + 2
    }
 
+   local size = map:getTileCount()
    for v, k in ipairs(set) do
-      if k == 0 then set[v] = 128
-      elseif k == -1 then set[v] = 127
-      elseif k == 129 then set[v] = 1
-      elseif k == 130 then set[v] = 2
+      if k == 0 then set[v] = size
+      elseif k == -1 then set[v] = size - 1
+      elseif k == size + 1 then set[v] = 1
+      elseif k == size + 2 then set[v] = 2
       end
    end
    

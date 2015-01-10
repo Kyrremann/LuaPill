@@ -11,7 +11,7 @@ I'm testing out Kenney.nl isometric tiles
  * You can also use + and -
  * 1 takes you to the first tile
 * Escape to quit
-* Use AWSD to move around the map
+* Use WASD to move around the map
 
 ## TODO
 * Add sidebar that show the current tile and what is before and after
