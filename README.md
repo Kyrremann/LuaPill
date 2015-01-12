@@ -44,10 +44,8 @@ config = {
 ```
 
 ## API
-```lua
-function luapill:saveMap()
-```
-Called to save the current map and tiles. Output in JSON-format.
+<code>function luapill:saveMap()</code> - Called to save the current map and tiles. Output in JSON-format.
+
 ```lua
 function luapill:loadMap(path)
 ```
