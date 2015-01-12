@@ -1,4 +1,4 @@
-local isoengine = {}
+local luapill = {}
 local TILES = {}
 local MAP = {}
 local SCALEMODE = false
@@ -19,7 +19,7 @@ local scrollIndex = 0
 local rotateIndex = 0
 
 local function drawTile(tile, map)
-   screen = isoengine:mapToScreen(map)
+   screen = luapill:mapToScreen(map)
    screen.y = screen.y - (tile:getHeight() - 83)
 
    love.graphics.draw(tile, -- drawable
@@ -29,9 +29,9 @@ local function drawTile(tile, map)
    )
 end
 
-function isoengine:draw()
+function luapill:draw()
    local screen = {}
-   local map = isoengine:getMouseAsMap()
+   local map = luapill:getMouseAsMap()
    love.graphics.push()
    love.graphics.translate(CAMERA.x, CAMERA.y)
    for y, vy in ipairs(MAP) do
@@ -50,14 +50,14 @@ function isoengine:draw()
    love.graphics.pop()
 end
 
-function isoengine:mapToScreen(map)
+function luapill:mapToScreen(map)
    local screen = {}
    screen.x = (map.x - map.y) * TILE_WIDTH_HALF
    screen.y = (map.x + map.y) * TILE_HEIGHT_HALF
    return screen
 end
 
-function isoengine:screenToMap(screen)
+function luapill:screenToMap(screen)
    local map = {}
    screen.x = (screen.x - CAMERA.x) / TILESCALE
    screen.y = (screen.y - CAMERA.y) / TILESCALE
@@ -66,8 +66,8 @@ function isoengine:screenToMap(screen)
    return map
 end
 
-function isoengine:getMouseAsMap()
-   return isoengine:screenToMap({ x = mo.getX(), y = mo.getY() })
+function luapill:getMouseAsMap()
+   return luapill:screenToMap({ x = mo.getX(), y = mo.getY() })
 end
 
 local function validateTileScale()
@@ -86,7 +86,7 @@ local function validateIndex()
    end
 end
 
-function isoengine:keypressed(key)
+function luapill:keypressed(key)
    if key == '1' then
       index = 1
    elseif key == '+' then
@@ -117,7 +117,7 @@ function isoengine:keypressed(key)
    validateTileScale()
 end
 
-function isoengine:keyreleased(key)
+function luapill:keyreleased(key)
    if key == "lshift" then
       SCALEMODE = false
    end
@@ -131,9 +131,9 @@ local function createTile(tile, map)
    }
 end
 
-function isoengine:mousepressed(x, y, button)
+function luapill:mousepressed(x, y, button)
    if button == "l" then
-      local map = isoengine:getMouseAsMap()
+      local map = luapill:getMouseAsMap()
       MAP[map.y][map.x] = createTile(TILES[index], map)
    elseif button == "r" then
       rotateIndex = rotateIndex + 1
@@ -190,10 +190,10 @@ local function initMap(width, height)
    end
 end
 
-function isoengine:saveMap()
+function luapill:saveMap()
 end
 
-function isoengine:loadMap(path)
+function luapill:loadMap(path)
    if love.filesystem.isFile(path) then
       
    else
@@ -201,23 +201,23 @@ function isoengine:loadMap(path)
    end
 end
 
-function isoengine:getTile(index)
+function luapill:getTile(index)
    return TILES[index]
 end
 
-function isoengine:getTileCount()
+function luapill:getTileCount()
    return #TILES
 end
 
-function isoengine:getScale()
+function luapill:getScale()
    return TILESCALE
 end
 
-function isoengine:getTileIndex()
+function luapill:getTileIndex()
    return index
 end
 
-function isoengine:setup(config)
+function luapill:setup(config)
    TILE_WIDTH_HALF = config.TILEWIDTH / 2
    TILE_HEIGHT_HALF = config.TILEHEIGHT / 2
    FOLDER = config.folder
@@ -228,4 +228,4 @@ function isoengine:setup(config)
    initMap(30, 30)
 end
 
-return isoengine
+return luapill
