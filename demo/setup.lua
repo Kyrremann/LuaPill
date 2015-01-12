@@ -12,3 +12,5 @@ require "math"
 
 ke.setKeyRepeat(.01, .01)
 mo.setVisible(false)
+love.window.setFullscreen(true)
+

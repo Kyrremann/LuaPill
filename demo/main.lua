@@ -1,13 +1,17 @@
+--[[
+   Title = "LuaPill"
+   Author = "Kyrre Havik Eriksen"
+   URL = "https://github.com/Kyrremann/LuaPill"
+]]
+
 function love.load()
    require "setup"
    
-   map = require "luapill"
+   map = require "../luapill"
    config = {
       tilewidth = 128,
       tileheight = 64,
-      folder = "images",
-      sortFolder = false,
-      defaultTile = 202
+      folder = "images"
    }
    map:setup(config)
 end
