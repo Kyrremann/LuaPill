@@ -3,8 +3,8 @@ function love.load()
    
    map = require "luapill"
    config = {
-      TILEWIDTH = 128,
-      TILEHEIGHT = 64,
+      tilewidth = 128,
+      tileheight = 64,
       folder = "images",
       sortFolder = false,
       defaultTile = 202
