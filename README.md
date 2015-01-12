@@ -1,5 +1,5 @@
 # LuaPill
-LuaPill (short for "Practical Isometric Layering Library for Lua") is an engine for generating isometric maps for Löve2D and Lua. See [Example](README.md#example) for usage, or try the soon-coming [demo](demo\).
+LuaPill (short for "Practical Isometric Layering Library for Lua") is an engine for generating isometric maps for Löve2D and Lua. See [Example](README.md#example) for usage, or try the [demo](demo). Just <code>git clone</code> the repository and run <code>love demo</code>.
 
 ## Example
 ```lua
@@ -100,7 +100,6 @@ Draws the map to the screen, usually called in love.draw()
 ## Input/controls
 * Move tile with mouse
 * Left click to place tile
-* Right click to rotate (only works if the tiles are sorted)
 * Shift + scroll to zoom in or out
  * You can also use + and -
 * Scroll to cycle through different tiles
@@ -113,6 +112,7 @@ Draws the map to the screen, usually called in love.draw()
 * Load map frome file
 * Save map to file
 * Different elevation
+* Right click to rotate (only works if the tiles are sorted)
 
 ## Installation
 Just copy the luapill.lua file wherever you want it. Then require it where you need it:
