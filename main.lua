@@ -1,7 +1,7 @@
 function love.load()
    require "setup"
    
-   map = require "map"
+   map = require "luapill"
    config = {
       TILEWIDTH = 128,
       TILEHEIGHT = 64,
