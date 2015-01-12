@@ -213,10 +213,6 @@ function luapill:getScale()
    return TILESCALE
 end
 
-function luapill:getTileIndex()
-   return index
-end
-
 function luapill:setup(config)
    TILE_WIDTH_HALF = config.tilewidth / 2
    TILE_HEIGHT_HALF = config.tileheight / 2
