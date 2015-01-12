@@ -218,11 +218,11 @@ function luapill:getTileIndex()
 end
 
 function luapill:setup(config)
-   TILE_WIDTH_HALF = config.TILEWIDTH / 2
-   TILE_HEIGHT_HALF = config.TILEHEIGHT / 2
+   TILE_WIDTH_HALF = config.tilewidth / 2
+   TILE_HEIGHT_HALF = config.tileheight / 2
    FOLDER = config.folder
-   SORT_FOLDER = config.sortFolder
-   DEFAULT_TILE = config.defaultTile or nil
+   SORT_FOLDER = config.sortFolder or false
+   DEFAULT_TILE = config.defaultTile or 1
 
    initTiles()
    initMap(30, 30)
