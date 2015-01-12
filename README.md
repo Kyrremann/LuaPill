@@ -1,5 +1,5 @@
 # LuaPill
-Practical Isometric Layering Library
+LuaPill (short for "Practical Isometric Layering Library for Lua") is an engine for generating isometric maps for Löve2D and Lua. See [Example](README.md#example) for usage, or try the soon-coming [demo]().
 
 ## Example
 ```lua
@@ -44,8 +44,56 @@ config = {
 ```
 
 ## API
+```lua
+function luapill:saveMap()
+```
+Called to save the current map and tiles. Output in JSON-format.
+```lua
+function luapill:loadMap(path)
+```
+Load a map from a given path.
+```lua
+function luapill:getTile(index)
+```
+Get the tile based on the index it has in the image folder.
+```lua
+function luapill:getTileCount()
+```
+Number of tiles in the image folder.
+```lua
+function luapill:getScale()
+```
+Current scale or zoom-level.
+```lua
+function luapill:mousepressed(x, y, button)
+```
+Sends mouse pressed to the library.
+```lua
+function luapill:keyreleased(key)
+```
+Sends key realeasing to the library.
+```lua
+function luapill:keypressed(key)
+```
+Sends key pressing to the library.
+```lua
+function luapill:getMouseAsMap()
+```
+Get mouse coordinates as a map, call goes through <code>screenToMap()</code>.
+```lua
+function luapill:screenToMap(screen)
+```
+Converts screen coordinates (pixels) to map coordinates (double array).
+```lua
+function luapill:mapToScreen(map)
+```
+Converts map coordinates (double array) to screen coordinates (pixels).
+```lua
+function luapill:draw()
+```
+Draws the map to the screen, usually called in love.draw()
 
-## Input
+## Input/controls
 * Move tile with mouse
 * Left click to place tile
 * Right click to rotate (only works if the tiles are sorted)
@@ -58,7 +106,6 @@ config = {
 * Use WASD to move around the map
 
 ## TODO
-* Add sidebar that show the current tile and what is before and after
 * Load map frome file
 * Save map to file
 * Different elevation
