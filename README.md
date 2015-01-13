@@ -35,11 +35,12 @@ end
 ## The config table
 ```lua
 config = {
-      tilewidth = 128,
-      tilewidth = 64,
-      folder = "images",
+      tilewidth = number, -- required
+      tilewidth = number, -- required
+      folder = "path", -- required
       sortFolder = boolean, -- optional, default false
-      defaultTile = number -- optional, default 1
+      defaultTile = number, -- optional, default 1
+      tileIndex = number -- optional, default 1
    }
 ```
 
@@ -113,6 +114,7 @@ Draws the map to the screen, usually called in love.draw()
 * Save map to file
 * Different elevation
 * Right click to rotate (only works if the tiles are sorted)
+* Allow for custom keybindings
 
 ## Installation
 Just copy the luapill.lua file wherever you want it. Then require it where you need it:

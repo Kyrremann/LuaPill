@@ -28,18 +28,18 @@ local CAMERA = {
 local TILE_WIDTH_HALF = nil
 local TILE_HEIGHT_HALF = nil
 
-local index = 1
-local scrollIndex = 0
+local TILE_INDEX = 1
+local scrollIndex= 0
 local rotateIndex = 0
 
 local function drawTile(tile, map)
    screen = luapill:mapToScreen(map)
    screen.y = screen.y - (tile:getHeight() - 83)
-
-   love.graphics.draw(tile, -- drawable
-      screen.x * TILESCALE, screen.y * TILESCALE, -- cords
-      0, -- rotation
-      TILESCALE, TILESCALE -- scale
+   
+   love.graphics.draw(tile,
+		      screen.x * TILESCALE, screen.y * TILESCALE, -- cords
+		      0, -- rotation
+		      TILESCALE, TILESCALE -- scale
    )
 end
 
@@ -51,11 +51,11 @@ function luapill:draw()
    for y, vy in ipairs(MAP) do
       for x, shape in ipairs(vy) do
 	 if map.x == x and map.y == y then
-	    drawTile(TILES[index], map)
+	    drawTile(TILES[TILE_INDEX], map)
 	 else
 	    local tile = shape.tile
 	    if not tile then
-	       tile = TILES[202]
+	       tile = TILES[DEFAULT_TILE]
 	    end
 	    drawTile(tile, shape.map)
 	 end
@@ -76,12 +76,12 @@ function luapill:screenToMap(screen)
    screen.x = (screen.x - CAMERA.x) / TILESCALE
    screen.y = (screen.y - CAMERA.y) / TILESCALE
    map.x = math.floor(math.floor(screen.x / TILE_WIDTH_HALF + screen.y / TILE_HEIGHT_HALF) / 2)
-   map.y = math.floor(math.floor(screen.y / TILE_HEIGHT_HALF -(screen.x / TILE_WIDTH_HALF)) / 2)
+   map.y = math.floor(math.floor(screen.y / TILE_HEIGHT_HALF -(screen.x / TILE_WIDTH_HALF)) / 2) + 1
    return map
 end
 
 function luapill:getMouseAsMap()
-   return luapill:screenToMap({ x = mo.getX(), y = mo.getY() })
+   return luapill:screenToMap({ x = mo.getX(), y = mo.getY()})
 end
 
 local function validateTileScale()
@@ -93,27 +93,27 @@ local function validateTileScale()
 end
 
 local function validateIndex()
-   if index < 1 then
-      index = #TILES
-   elseif index > #TILES then
-      index = 1
+   if TILE_INDEX < 1 then
+      TILE_INDEX = #TILES
+   elseif TILE_INDEX > #TILES then
+      TILE_INDEX = 1
    end
 end
 
 function luapill:keypressed(key)
    if key == '1' then
-      index = 1
+      TILE_INDEX = 1
    elseif key == '+' then
       if SCALEMODE then
 	 TILESCALE = TILESCALE + .2
       else
-	 index = index + 1
+	 TILE_INDEX = TILE_INDEX + 1
       end
    elseif key == "-" then
       if SCALEMODE then
 	 TILESCALE = TILESCALE - .2
       else
-	 index = index - 1
+	 TILE_INDEX = TILE_INDEX - 1
       end
    elseif key == "lshift" then
       SCALEMODE = true
@@ -148,7 +148,7 @@ end
 function luapill:mousepressed(x, y, button)
    if button == "l" then
       local map = luapill:getMouseAsMap()
-      MAP[map.y][map.x] = createTile(TILES[index], map)
+      MAP[map.y][map.x] = createTile(TILES[TILE_INDEX], map)
    elseif button == "r" then
       rotateIndex = rotateIndex + 1
       if rotateIndex > 4 then
@@ -158,13 +158,13 @@ function luapill:mousepressed(x, y, button)
       if SCALEMODE then
 	 TILESCALE = TILESCALE + .2
       else
-	 index = index + 1
+	 TILE_INDEX = TILE_INDEX + 1
       end
    elseif button == "wd" then
       if SCALEMODE then
 	 TILESCALE = TILESCALE - .2
       else
-	 index = index - 1
+	 TILE_INDEX = TILE_INDEX - 1
       end
    end
 
@@ -228,7 +228,7 @@ function luapill:getScale()
 end
 
 function luapill:getTileIndex()
-   return index
+   return TILE_INDEX
 end
 
 function luapill:setup(config)
@@ -237,6 +237,7 @@ function luapill:setup(config)
    FOLDER = config.folder
    SORT_FOLDER = config.sortFolder or false
    DEFAULT_TILE = config.defaultTile or 1
+   TILE_INDEX = config.tileIndex or 1
 
    initTiles()
    initMap(30, 30)
