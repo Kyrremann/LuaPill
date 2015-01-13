@@ -7,26 +7,36 @@
 function love.load()
    require "setup"
    
-   map = require "../luapill"
+   map = require "luapill"
    config = {
       tilewidth = 128,
       tileheight = 64,
-      folder = "images"
+      folder = "images",
+      tileIndex = 3
    }
    map:setup(config)
+   showHelp = false
+   -- move mouse to center
+   love.mouse.setPosition(gr.getWidth() / 2, gr.getHeight() / 2)
 end
 
 function love.update(dt)
 end
 
 function love.draw()
+   love.graphics.setColor(255, 255, 255)
    map:draw()
 
    drawSidebar()
-
+   
    gr.setColor(255, 255, 255)
    gr.print("Tile: " .. map:getTileIndex(), 10, 10)
    gr.print("Scale: " .. map:getScale(), 10, 25)
+   gr.print("Press 'h' for keys", gr.getWidth() * .8, 10)
+
+   if showHelp then
+      drawHelpScreen()
+   end
 end
 
 function drawSidebar()
@@ -61,9 +71,21 @@ function drawSidebar()
    gr.draw(map:getTile(set[5]), 64, sh + 128 * 2, 0, .5, .5)
 end
 
+function drawHelpScreen()
+   gr.setColor(0, 0, 0, 50)
+   gr.rectangle("fill",
+		gr.getWidth() * .3, gr.getHeight() * .3,
+		300, 150)
+   gr.setColor(255, 255, 255)
+   gr.print("* Move tile with mouse\n* Left click to place tiled\n* Shift + scroll to zoom in or out\n * You can also use + and -\n* Scroll to cycle through different tiles\n * You can also use + and -\n * 1 takes you to the first tile\n* Escape to quit\n* Use WASD to move around the map)",
+	    gr.getWidth() * .31, gr.getHeight() * .31)
+end
+
 function love.keypressed(key)
    if key == "escape" then
       love.event.push("quit")
+   elseif key == 'h' or key == 'H' then
+      showHelp = not showHelp
    else
       map:keypressed(key)
    end
