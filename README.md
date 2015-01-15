@@ -111,7 +111,9 @@ Draws the map to the screen, usually called in love.draw()
 
 ## TODO
 * Load map frome file
+ * F6 to load a level
 * Save map to file
+ * F5 to save level
 * Different elevation
 * Right click to rotate (only works if the tiles are sorted)
 * Allow for custom keybindings

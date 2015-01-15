@@ -53,7 +53,7 @@ function luapill:draw()
 	 if map.x == x and map.y == y then
 	    drawTile(TILES[TILE_INDEX], map)
 	 else
-	    local tile = shape.tile
+	    local tile = TILES[shape.tile]
 	    if not tile then
 	       tile = TILES[DEFAULT_TILE]
 	    end
@@ -125,6 +125,10 @@ function luapill:keypressed(key)
       CAMERA.x = CAMERA.x + 10
    elseif key == "d" then
       CAMERA.x = CAMERA.x - 10
+   elseif key == "f5" then
+      luapill:saveMap()
+   elseif key == "f6" then
+      -- TODO: Load map
    end
 
    validateIndex()
@@ -148,7 +152,7 @@ end
 function luapill:mousepressed(x, y, button)
    if button == "l" then
       local map = luapill:getMouseAsMap()
-      MAP[map.y][map.x] = createTile(TILES[TILE_INDEX], map)
+      MAP[map.y][map.x] = createTile(index, map)
    elseif button == "r" then
       rotateIndex = rotateIndex + 1
       if rotateIndex > 4 then
@@ -199,12 +203,24 @@ local function initMap(width, height)
    for y=1, height do
       MAP[y] = {}
       for x=1, width do
-	 MAP[y][x] = createTile(TILES[DEFAULT_TILE], { x = x, y = y })
+	 MAP[y][x] = createTile(DEFAULT_TILE, { x = x, y = y })
       end
    end
 end
 
 function luapill:saveMap()
+   local output = ""
+   for y, vy in ipairs(MAP) do
+      for x, tile in ipairs(vy) do
+	 output = string.format("%s\n%d;%d;%d;%s",
+				output,
+				tile.tile,
+				tile.map.x, tile.map.y,
+				tile.locked)
+      end
+   end
+   
+   print(output)
 end
 
 function luapill:loadMap(path)
