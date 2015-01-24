@@ -29,7 +29,7 @@ local TILE_WIDTH_HALF = nil
 local TILE_HEIGHT_HALF = nil
 
 local TILE_INDEX = 1
-local scrollIndex= 0
+local scrollIndex = 0
 local rotateIndex = 0
 
 local function drawTile(tile, map)
@@ -152,7 +152,7 @@ end
 function luapill:mousepressed(x, y, button)
    if button == "l" then
       local map = luapill:getMouseAsMap()
-      MAP[map.y][map.x] = createTile(index, map)
+      MAP[map.y][map.x] = createTile(TILE_INDEX, map)
    elseif button == "r" then
       rotateIndex = rotateIndex + 1
       if rotateIndex > 4 then
@@ -208,8 +208,8 @@ local function initMap(width, height)
    end
 end
 
-function luapill:saveMap()
-   local output = ""
+function luapill:saveMap(path)
+   local output = "TILE_INDEX;X;Y;LOCKED"
    for y, vy in ipairs(MAP) do
       for x, tile in ipairs(vy) do
 	 output = string.format("%s\n%d;%d;%d;%s",
@@ -220,7 +220,11 @@ function luapill:saveMap()
       end
    end
    
-   print(output)
+   if not path then
+      path = "default_" .. love.timer.getTime() .. ".luapill"
+   end
+
+   return love.filesystem.write(path, output)
 end
 
 function luapill:loadMap(path)
