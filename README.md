@@ -19,18 +19,6 @@ end
 function love.draw()
    map:draw()
 end
-
-function love.keypressed(key)
-    map:keypressed(key)
-end
-
-function love.keyreleased(key)
-   map:keyreleased(key)
-end
-
-function love.mousepressed(x, y, button)
-   map:mousepressed(x, y, button)
-end
 ```
 ## The config table
 ```lua
@@ -96,7 +84,27 @@ Converts map coordinates (double array) to screen coordinates (pixels).
 ```lua
 function luapill:draw()
 ```
-Draws the map to the screen, usually called in love.draw()
+Draws the map to the screen, usually called in love.draw().
+```lua
+function luapill:zoomMap(scale)
+```
+Zooms tha map either postively or negatively. Maximum is 2, and minimum is 0.2.
+```lua
+function luapill:shiftTile(by)
+```
+Shift to the next tile, based on the value sent in.
+```lua
+function luapill:getCamera()
+```
+Get the coordinates for the camera.
+```lua
+function luapill:moveCamera(x, y)
+```
+Moves the camera to the x- and y-axis.
+```lua
+function luapill:placeTile()
+```
+Place a new tile at the given location, overriding the previous tile.
 
 ## Input/controls
 * Move tile with mouse
@@ -105,18 +113,18 @@ Draws the map to the screen, usually called in love.draw()
  * You can also use + and -
 * Scroll to cycle through different tiles
  * You can also use + and -
- * 1 takes you to the first tile
 * Escape to quit
 * Use WASD to move around the map
 
 ## TODO
-* Load map frome file
- * F6 to load a level
-* Save map to file
- * F5 to save level
-* Different elevation
-* Right click to rotate (only works if the tiles are sorted)
-* Allow for custom keybindings
+- [ ] Load map frome file
+ - F6 to load a level
+- [x] Save map to file
+ - F5 to save level
+- [ ] Different elevation
+- [ ] Right click to rotate (only works if the tiles are sorted)
+- [x] Allow for custom keybindings
+ - Keybindings have been removed from the library, should be handled by the game 
 
 ## Installation
 Just copy the luapill.lua file wherever you want it. Then require it where you need it:
