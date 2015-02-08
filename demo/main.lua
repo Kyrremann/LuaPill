@@ -6,6 +6,8 @@
 
 function love.load()
    require "setup"
+
+   SCALEMODE = false
    
    map = require "luapill"
    config = {
@@ -77,7 +79,7 @@ function drawHelpScreen()
 		gr.getWidth() * .3, gr.getHeight() * .3,
 		300, 150)
    gr.setColor(255, 255, 255)
-   gr.print("* Move tile with mouse\n* Left click to place tiled\n* Shift + scroll to zoom in or out\n * You can also use + and -\n* Scroll to cycle through different tiles\n * You can also use + and -\n * 1 takes you to the first tile\n* Escape to quit\n* Use WASD to move around the map)",
+   gr.print("* Move tile with mouse\n* Left click to place tiled\n* Shift + scroll to zoom in or out\n * You can also use + and -\n* Scroll to cycle through different tiles\n * You can also use + and -\n * Escape to quit\n* Use WASD to move around the map)",
 	    gr.getWidth() * .31, gr.getHeight() * .31)
 end
 
@@ -86,15 +88,59 @@ function love.keypressed(key)
       love.event.push("quit")
    elseif key == 'h' or key == 'H' then
       showHelp = not showHelp
-   else
-      map:keypressed(key)
+   elseif key == '+' then
+      if SCALEMODE then
+	 map:zoomMap(map:getScale() + .2)
+      else
+	 map:shiftTile(1)
+      end
+   elseif key == "-" then
+      if SCALEMODE then
+	 map:zoomMap(map:getScale() - .2)
+      else
+	 map:shiftTile(-1)
+      end
+   elseif key == "lshift" then
+      SCALEMODE = true
+   elseif key == "w" then
+      local c = map:getCamera()
+      map:moveCamera(c.x, c.y + 10)
+   elseif key == "s" then
+      local c = map:getCamera()
+      map:moveCamera(c.x, c.y - 10)
+   elseif key == "a" then
+      local c = map:getCamera()
+      map:moveCamera(c.x + 10, c.y)
+   elseif key == "d" then
+      local c = map:getCamera()
+      map:moveCamera(c.x - 10, c.y)
+   elseif key == "f5" then
+      map:saveMap()
+   elseif key == "f6" then
+      -- TODO: Load map
    end
 end
 
 function love.keyreleased(key)
-   map:keyreleased(key)
+   if key == "lshift" then
+      SCALEMODE = false
+   end
 end
 
 function love.mousepressed(x, y, button)
-   map:mousepressed(x, y, button)
+   if button == "l" then
+      map:placeTile()
+   elseif button == "wu" then
+      if SCALEMODE then
+	 map:zoomMap(map:getScale() + .2)
+      else
+	 map:shiftTile(1)
+      end
+   elseif button == "wd" then
+      if SCALEMODE then
+	 map:zoomMap(map:getScale() - .2)
+      else
+	 map:shiftTile(-1)
+      end
+   end
 end

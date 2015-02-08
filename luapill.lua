@@ -15,8 +15,6 @@
 local luapill = {}
 local TILES = {}
 local MAP = {}
-local SCALEMODE = false
-local SCROLLMODE = false
 local TILESCALE = 1
 local FOLDER = nil
 local SORT_FOLDER = false
@@ -29,8 +27,6 @@ local TILE_WIDTH_HALF = nil
 local TILE_HEIGHT_HALF = nil
 
 local TILE_INDEX = 1
-local scrollIndex = 0
-local rotateIndex = 0
 
 local function drawTile(tile, map)
    screen = luapill:mapToScreen(map)
@@ -100,80 +96,12 @@ local function validateIndex()
    end
 end
 
-function luapill:keypressed(key)
-   if key == '1' then
-      TILE_INDEX = 1
-   elseif key == '+' then
-      if SCALEMODE then
-	 TILESCALE = TILESCALE + .2
-      else
-	 TILE_INDEX = TILE_INDEX + 1
-      end
-   elseif key == "-" then
-      if SCALEMODE then
-	 TILESCALE = TILESCALE - .2
-      else
-	 TILE_INDEX = TILE_INDEX - 1
-      end
-   elseif key == "lshift" then
-      SCALEMODE = true
-   elseif key == "w" then
-      CAMERA.y = CAMERA.y + 10
-   elseif key == "s" then
-      CAMERA.y = CAMERA.y - 10
-   elseif key == "a" then
-      CAMERA.x = CAMERA.x + 10
-   elseif key == "d" then
-      CAMERA.x = CAMERA.x - 10
-   elseif key == "f5" then
-      luapill:saveMap()
-   elseif key == "f6" then
-      -- TODO: Load map
-   end
-
-   validateIndex()
-   validateTileScale()
-end
-
-function luapill:keyreleased(key)
-   if key == "lshift" then
-      SCALEMODE = false
-   end
-end
-
 local function createTile(tile, map)
    return {
       tile = tile,
       map = map,
       locked = false
    }
-end
-
-function luapill:mousepressed(x, y, button)
-   if button == "l" then
-      local map = luapill:getMouseAsMap()
-      MAP[map.y][map.x] = createTile(TILE_INDEX, map)
-   elseif button == "r" then
-      rotateIndex = rotateIndex + 1
-      if rotateIndex > 4 then
-	 rotateIndex = 1
-      end
-   elseif button == "wu" then
-      if SCALEMODE then
-	 TILESCALE = TILESCALE + .2
-      else
-	 TILE_INDEX = TILE_INDEX + 1
-      end
-   elseif button == "wd" then
-      if SCALEMODE then
-	 TILESCALE = TILESCALE - .2
-      else
-	 TILE_INDEX = TILE_INDEX - 1
-      end
-   end
-
-   validateIndex()
-   validateTileScale()
 end
 
 local function initTiles()
@@ -227,6 +155,16 @@ function luapill:saveMap(path)
    return love.filesystem.write(path, output)
 end
 
+function luapill:zoomMap(scale)
+   TILESCALE = scale
+   validateTileScale()
+end
+
+function luapill:shiftTile(index)
+   TILE_INDEX = TILE_INDEX + index
+   validateIndex()
+end
+
 function luapill:loadMap(path)
    if love.filesystem.isFile(path) then
       
@@ -249,6 +187,20 @@ end
 
 function luapill:getTileIndex()
    return TILE_INDEX
+end
+
+function luapill:moveCamera(x, y)
+   CAMERA.y = y
+   CAMERA.x = x
+end
+
+function luapill:getCamera()
+   return CAMERA
+end
+
+function luapill:placeTile()
+   local map = luapill:getMouseAsMap()
+   MAP[map.y][map.x] = createTile(TILE_INDEX, map)
 end
 
 function luapill:setup(config)
