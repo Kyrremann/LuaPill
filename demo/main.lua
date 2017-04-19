@@ -83,7 +83,7 @@ function drawHelpScreen()
 	    gr.getWidth() * .31, gr.getHeight() * .31)
 end
 
-function love.keypressed(key)
+function love.keypressed(key, scancode, isrepeat)
    if key == "escape" then
       love.event.push("quit")
    elseif key == 'h' or key == 'H' then
@@ -121,22 +121,26 @@ function love.keypressed(key)
    end
 end
 
-function love.keyreleased(key)
+function love.keyreleased(key, scancode)
    if key == "lshift" then
       SCALEMODE = false
    end
 end
 
-function love.mousepressed(x, y, button)
-   if button == "l" then
+function love.mousepressed(x, y, button, istouch)
+   if button == 1 then
       map:placeTile()
-   elseif button == "wu" then
+   end
+end
+
+function love.wheelmoved(x, y)
+   if y > 0 then
       if SCALEMODE then
 	 map:zoomMap(map:getScale() + .2)
       else
 	 map:shiftTile(1)
       end
-   elseif button == "wd" then
+   elseif y < 0 then
       if SCALEMODE then
 	 map:zoomMap(map:getScale() - .2)
       else
