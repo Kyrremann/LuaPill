@@ -105,15 +105,6 @@ local function createTile(tile, map)
 end
 
 local function initTiles()
-   local function formatId(n)
-      if n < 10 then
-	 return "00" .. n
-      elseif n < 100 then
-	 return "0" .. n
-      end
-      return n
-   end
-
    local files = love.filesystem.getDirectoryItems(FOLDER)
    for k, file in ipairs(files) do
       table.insert(TILES, love.graphics.newImage(FOLDER .. "/" .. file))
