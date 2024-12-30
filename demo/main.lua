@@ -8,7 +8,7 @@ function love.load()
    require "setup"
 
    SCALEMODE = false
-   
+
    map = require "luapill"
    config = {
       tilewidth = 128,
