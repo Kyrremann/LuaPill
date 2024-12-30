@@ -50,20 +50,20 @@ function drawSidebar()
    gr.setColor(255, 255, 255)
    local sh = gr.getHeight() / 2
    local set = {
-      index - 2,
-      index - 1,
-      index,
-      index + 1,
-      index + 2
+	  index - 2,
+	  index - 1,
+	  index,
+	  index + 1,
+	  index + 2
    }
 
    local size = map:getTileCount()
    for v, k in ipairs(set) do
-      if k == 0 then set[v] = size
-      elseif k == -1 then set[v] = size - 1
-      elseif k == size + 1 then set[v] = 1
-      elseif k == size + 2 then set[v] = 2
-      end
+	  if k == 0 then set[v] = size
+	  elseif k == -1 then set[v] = size - 1
+	  elseif k == size + 1 then set[v] = 1
+	  elseif k == size + 2 then set[v] = 2
+	  end
    end
    
    gr.draw(map:getTile(set[1]), 64, sh - 128 * 2, 0, .5, .5)
@@ -76,54 +76,54 @@ end
 function drawHelpScreen()
    gr.setColor(0, 0, 0, 50)
    gr.rectangle("fill",
-		gr.getWidth() * .3, gr.getHeight() * .3,
-		300, 150)
+				gr.getWidth() * .3, gr.getHeight() * .3,
+				300, 150)
    gr.setColor(255, 255, 255)
-   gr.print("* Move tile with mouse\n* Left click to place tiled\n* Shift + scroll to zoom in or out\n * You can also use + and -\n* Scroll to cycle through different tiles\n * You can also use + and -\n * Escape to quit\n* Use WASD to move around the map)",
-	    gr.getWidth() * .31, gr.getHeight() * .31)
+   gr.print("* Move tile with mouse\n* Left click to place tile\n* Shift + scroll to zoom in or out\n * Scroll to cycle through tiles\n* Or use + and - to cycle through tiles\n * Escape to quit\n* Use WASD to move around the map",
+			gr.getWidth() * .31, gr.getHeight() * .31)
 end
 
 function love.keypressed(key, scancode, isrepeat)
    if key == "escape" then
-      love.event.push("quit")
+	  love.event.push("quit")
    elseif key == 'h' or key == 'H' then
-      showHelp = not showHelp
+	  showHelp = not showHelp
    elseif key == '+' then
-      if SCALEMODE then
+	  if SCALEMODE then
 		 map:zoomMap(map:getScale() + .2)
-      else
+	  else
 		 map:shiftTile(1)
-      end
+	  end
    elseif key == "-" then
-      if SCALEMODE then
+	  if SCALEMODE then
 		 map:zoomMap(map:getScale() - .2)
-      else
+	  else
 		 map:shiftTile(-1)
-      end
+	  end
    elseif key == "lshift" then
-      SCALEMODE = true
+	  SCALEMODE = true
    elseif key == "w" then
-      local c = map:getCamera()
-      map:moveCamera(c.x, c.y + 10)
+	  local c = map:getCamera()
+	  map:moveCamera(c.x, c.y + 10)
    elseif key == "s" then
-      local c = map:getCamera()
-      map:moveCamera(c.x, c.y - 10)
+	  local c = map:getCamera()
+	  map:moveCamera(c.x, c.y - 10)
    elseif key == "a" then
-      local c = map:getCamera()
-      map:moveCamera(c.x + 10, c.y)
+	  local c = map:getCamera()
+	  map:moveCamera(c.x + 10, c.y)
    elseif key == "d" then
-      local c = map:getCamera()
-      map:moveCamera(c.x - 10, c.y)
+	  local c = map:getCamera()
+	  map:moveCamera(c.x - 10, c.y)
    elseif key == "f5" then
-      map:saveMap()
+	  map:saveMap()
    elseif key == "f6" then
-      -- TODO: Load map
+	  -- TODO: Load map
    end
 end
 
 function love.keyreleased(key, scancode)
    if key == "lshift" then
-      SCALEMODE = false
+	  SCALEMODE = false
    end
 end
 
