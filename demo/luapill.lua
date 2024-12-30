@@ -33,9 +33,9 @@ local function drawTile(tile, map)
    screen.y = screen.y - (tile:getHeight() - 83)
    
    love.graphics.draw(tile,
-		      screen.x * TILESCALE, screen.y * TILESCALE, -- cords
-		      0, -- rotation
-		      TILESCALE, TILESCALE -- scale
+					  screen.x * TILESCALE, screen.y * TILESCALE, -- cords
+					  0, -- rotation
+					  TILESCALE, TILESCALE -- scale
    )
 end
 
@@ -46,15 +46,15 @@ function luapill:draw()
    love.graphics.translate(CAMERA.x, CAMERA.y)
    for y, vy in ipairs(MAP) do
       for x, shape in ipairs(vy) do
-	 if map.x == x and map.y == y then
-	    drawTile(TILES[TILE_INDEX], map)
-	 else
-	    local tile = TILES[shape.tile]
-	    if not tile then
-	       tile = TILES[DEFAULT_TILE]
-	    end
-	    drawTile(tile, shape.map)
-	 end
+		 if map.x == x and map.y == y then
+			drawTile(TILES[TILE_INDEX], map)
+		 else
+			local tile = TILES[shape.tile]
+			if not tile then
+			   tile = TILES[DEFAULT_TILE]
+			end
+			drawTile(tile, shape.map)
+		 end
       end
    end
    love.graphics.pop()
@@ -131,7 +131,7 @@ local function initMap(width, height)
    for y=1, height do
       MAP[y] = {}
       for x=1, width do
-	 MAP[y][x] = createTile(DEFAULT_TILE, { x = x, y = y })
+		 MAP[y][x] = createTile(DEFAULT_TILE, { x = x, y = y })
       end
    end
 end
@@ -140,11 +140,11 @@ function luapill:saveMap(path)
    local output = "TILE_INDEX;X;Y;LOCKED"
    for y, vy in ipairs(MAP) do
       for x, tile in ipairs(vy) do
-	 output = string.format("%s\n%d;%d;%d;%s",
-				output,
-				tile.tile,
-				tile.map.x, tile.map.y,
-				tile.locked)
+		 output = string.format("%s\n%d;%d;%d;%s",
+								output,
+								tile.tile,
+								tile.map.x, tile.map.y,
+								tile.locked)
       end
    end
    

@@ -90,15 +90,15 @@ function love.keypressed(key, scancode, isrepeat)
       showHelp = not showHelp
    elseif key == '+' then
       if SCALEMODE then
-	 map:zoomMap(map:getScale() + .2)
+		 map:zoomMap(map:getScale() + .2)
       else
-	 map:shiftTile(1)
+		 map:shiftTile(1)
       end
    elseif key == "-" then
       if SCALEMODE then
-	 map:zoomMap(map:getScale() - .2)
+		 map:zoomMap(map:getScale() - .2)
       else
-	 map:shiftTile(-1)
+		 map:shiftTile(-1)
       end
    elseif key == "lshift" then
       SCALEMODE = true
@@ -129,7 +129,7 @@ end
 
 function love.mousepressed(x, y, button, istouch)
    if button == 1 then
-      map:placeTile()
+	  map:placeTile()
    end
 end
 
