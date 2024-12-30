@@ -77,9 +77,17 @@ function drawHelpScreen()
    gr.setColor(0, 0, 0, 50)
    gr.rectangle("fill",
 				gr.getWidth() * .3, gr.getHeight() * .3,
-				300, 150)
+				260, 140)
    gr.setColor(255, 255, 255)
-   gr.print("* Move tile with mouse\n* Left click to place tile\n* Shift + scroll to zoom in or out\n * Scroll to cycle through tiles\n* Or use + and - to cycle through tiles\n * Escape to quit\n* Use WASD to move around the map",
+   gr.print("* Move tile with mouse\n" ..
+			"* Left click to place tile\n" ..
+			"* Shift + scroll to zoom in or out\n" ..
+			"  * Or use + and -\n" ..
+			"* Scroll to cycle through tiles\n" ..
+			"  * Or use + and -\n" ..
+			"* Use rigth click and drag to move map\n" ..
+			"  * Or use WASD to move around\n" ..
+			"* Escape to quit\n",
 			gr.getWidth() * .31, gr.getHeight() * .31)
 end
 
@@ -131,6 +139,13 @@ function love.mousepressed(x, y, button, istouch)
    if button == 1 then
 	  map:placeTile()
    end
+end
+
+function love.mousemoved(x, y, dx, dy, istouch)
+	if love.mouse.isDown(2) then
+	   local c = map:getCamera()
+	   map:moveCamera(c.x + dx, c.y + dy)
+	end
 end
 
 function love.wheelmoved(x, y)
