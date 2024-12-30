@@ -150,16 +150,12 @@ end
 
 function love.wheelmoved(x, y)
    if y > 0 then
-      if SCALEMODE then
-	 map:zoomMap(map:getScale() + .2)
-      else
-	 map:shiftTile(1)
-      end
+	  map:shiftTile(1)
    elseif y < 0 then
-      if SCALEMODE then
-	 map:zoomMap(map:getScale() - .2)
-      else
-	 map:shiftTile(-1)
-      end
+	  map:shiftTile(-1)
+   elseif x > 0 then
+	  map:zoomMap(map:getScale() + .2)
+   elseif x < 0 then
+	  map:zoomMap(map:getScale() - .2)
    end
 end
