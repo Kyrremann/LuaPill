@@ -200,6 +200,10 @@ end
 
 function luapill:placeTile()
    local map = luapill:getMouseAsMap()
+   if not MAP[map.y] or not MAP[map.y][map.x] then
+	  return
+	end
+
    MAP[map.y][map.x] = createTile(TILE_INDEX, map)
 end
 
