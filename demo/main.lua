@@ -30,14 +30,14 @@ function love.draw()
    map:draw()
 
    drawSidebar()
-   
+
    gr.setColor(255, 255, 255)
    gr.print("Tile: " .. map:getTileIndex(), 10, 10)
    gr.print("Scale: " .. map:getScale(), 10, 25)
    gr.print("Press 'h' for keys", gr.getWidth() * .8, 10)
 
    if showHelp then
-      drawHelpScreen()
+	  drawHelpScreen()
    end
 end
 
