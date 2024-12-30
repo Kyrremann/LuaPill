@@ -1,6 +1,6 @@
 --[[
    Title = "LuaPill"
-   Author = "Kyrre Havik Eriksen"
+   Author = "Kyrre Havik"
    URL = "https://github.com/Kyrremann/LuaPill"
 ]]
 
