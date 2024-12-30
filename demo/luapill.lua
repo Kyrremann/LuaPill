@@ -30,7 +30,7 @@ local TILE_INDEX = 1
 
 local function drawTile(tile, map)
    screen = luapill:mapToScreen(map)
-   screen.y = screen.y - (tile:getHeight() - 83)
+   screen.y = screen.y - (tile:getHeight() - 83) -- magic number
    
    love.graphics.draw(tile,
 					  screen.x * TILESCALE, screen.y * TILESCALE, -- cords
@@ -46,7 +46,7 @@ function luapill:draw()
    love.graphics.translate(CAMERA.x, CAMERA.y)
    for y, vy in ipairs(MAP) do
       for x, shape in ipairs(vy) do
-		 if map.x == x and map.y == y then
+		 if map.x == x and map.y == y then -- mouse is hovering over this tile
 			drawTile(TILES[TILE_INDEX], map)
 		 else
 			local tile = TILES[shape.tile]
