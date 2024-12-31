@@ -11,10 +11,11 @@ function love.load()
 
    map = require "luapill"
    config = {
-      tilewidth = 128,
-      tileheight = 64,
-      folder = "images",
-      tileIndex = 3
+	  tilewidth = 226, -- 256
+	  tileheight = 216/2, -- 352
+	  folder = "Tiles",
+	  defaultTile = 114,
+	  tileIndex = 114 -- 3 -- images
    }
    map:setup(config)
    showHelp = false
@@ -65,12 +66,14 @@ function drawSidebar()
 	  elseif k == size + 2 then set[v] = 2
 	  end
    end
-   
-   gr.draw(map:getTile(set[1]), 64, sh - 128 * 2, 0, .5, .5)
-   gr.draw(map:getTile(set[2]), 46, sh - 128, 0, .75, .75)
-   gr.draw(map:getTile(set[3]), 36, sh)
-   gr.draw(map:getTile(set[4]), 46, sh + 128, 0, .75, .75)
-   gr.draw(map:getTile(set[5]), 64, sh + 128 * 2, 0, .5, .5)
+
+   local height = map:getTile(1):getHeight() / 4
+
+   gr.draw(map:getTile(set[1]), 64, sh - height * 2.75, 0, .25, .25)
+   gr.draw(map:getTile(set[2]), 46, sh - height * 2, 0, .38, .38)
+   gr.draw(map:getTile(set[3]), 36, sh - height, 0, .5, .5)
+   gr.draw(map:getTile(set[4]), 46, sh + height * .75, 0, .38, .38)
+   gr.draw(map:getTile(set[5]), 64, sh + height * 2.25, 0, .25, .25)
 end
 
 function drawHelpScreen()

@@ -71,8 +71,8 @@ function luapill:screenToMap(screen)
    local map = {}
    screen.x = (screen.x - CAMERA.x) / TILESCALE
    screen.y = (screen.y - CAMERA.y) / TILESCALE
-   map.x = math.floor(math.floor(screen.x / TILE_WIDTH_HALF + screen.y / TILE_HEIGHT_HALF) / 2)
-   map.y = math.floor(math.floor(screen.y / TILE_HEIGHT_HALF -(screen.x / TILE_WIDTH_HALF)) / 2) + 1
+   map.x = math.floor(math.floor(screen.x / TILE_WIDTH_HALF + screen.y / TILE_HEIGHT_HALF) / 2) + 1
+   map.y = math.floor(math.floor(screen.y / TILE_HEIGHT_HALF -(screen.x / TILE_WIDTH_HALF)) / 2) + 2
    return map
 end
 
