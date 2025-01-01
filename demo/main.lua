@@ -22,7 +22,7 @@ function love.load()
 	  tileIndex = 114 -- 3 -- images
    }
    map:setup(config)
-   showHelp = false
+   SHOW_HELP = false
    -- move mouse to center
    love.mouse.setPosition(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
 end
@@ -44,7 +44,7 @@ function love.draw()
 
 
 
-   if showHelp then
+   if SHOW_HELP then
 	  drawHelpScreen()
    end
 end
@@ -105,7 +105,7 @@ function love.keypressed(key, scancode, isrepeat)
    if key == "escape" then
 	  love.event.push("quit")
    elseif key == 'h' or key == 'H' then
-	  showHelp = not showHelp
+	  SHOW_HELP = not SHOW_HELP
    elseif key == '+' then
 	  if SCALEMODE then
 		 map:zoomMap(map:getScale() + .2)
