@@ -1,5 +1,5 @@
 # LuaPill
-LuaPill (short for "Practical Isometric Layering Library for Lua") is an engine for generating isometric maps for Löve2D and Lua. See [Example](README.md#example) for usage, or try the [demo](demo). Just <code>git clone</code> the repository and run <code>love demo</code>.
+LuaPill (short for "Practical Isometric Layering Library") is an engine for generating isometric maps for Löve2D and Lua. See [Example](README.md#example) for usage, or try the [demo](demo). Just <code>git clone</code> the repository and run <code>love demo</code>.
 
 ## Example
 ```lua
