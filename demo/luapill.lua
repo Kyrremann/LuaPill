@@ -129,25 +129,29 @@ local function initTiles()
    end
 end
 
-local function initMap(size)
+local function initMap(size, tile)
    for y=1, size do
       MAP[y] = {}
       for x=1, size do
-		 MAP[y][x] = { DEFAULT_TILE }
+		 MAP[y][x] = { tile }
       end
    end
 end
 
 function luapill:saveMap(path)
-   local output = "TILE_INDEX;X;Y;LOCKED"
-   for _, vy in ipairs(MAP) do
-      for _, tile in ipairs(vy) do
-		 output = string.format("%s\n%d;%d;%d;%s",
-								output,
-								tile.tile,
-								tile.map.x, tile.map.y,
-								tile.locked)
-      end
+   local output = "X;Y,TILE;LEVEL"
+
+   for y=1, MAP_SIZE do
+	  for x=1, MAP_SIZE do
+		 local tiles = MAP[y][x]
+		 for level, tile in pairs(tiles) do
+			output = string.format("%s\n%d;%d;%d;%d",
+								   output,
+								   x, y,
+								   tile,
+								   level)
+		 end
+	  end
    end
 
    if not path then
@@ -173,8 +177,22 @@ function luapill:shiftLevel(index)
 end
 
 function luapill:loadMap(path)
-   if love.filesystem.isFile(path) then
-      -- TODO: Implement loading of maps
+   initMap(MAP_SIZE, nil)
+
+   local info = love.filesystem.getInfo(path)
+   if info and info.type == "file" then
+	  for line in love.filesystem.lines(path) do
+		 local x, y, tile, level = line.match(line, "(%d+);(%d+);(%d+);(%d+)")
+		 x = tonumber(x)
+		 y = tonumber(y)
+		 tile = tonumber(tile)
+		 level = tonumber(level)
+
+		 if x then -- skips header line
+			print(x, y, tile, level)
+			MAP[y][x][level] = tile
+		 end
+	  end
    else
       print("No such file with path: " .. path)
    end
@@ -238,7 +256,7 @@ function luapill:setup(config)
    MAP_SIZE = config.mapSize or 32
 
    initTiles()
-   initMap(MAP_SIZE)
+   initMap(MAP_SIZE, DEFAULT_TILE)
 end
 
 return luapill

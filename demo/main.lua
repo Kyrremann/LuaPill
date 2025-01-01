@@ -135,9 +135,16 @@ function love.keypressed(key, scancode, isrepeat)
 	  local c = map:getCamera()
 	  map:moveCamera(c.x - 10, c.y)
    elseif key == "f5" then
-	  map:saveMap()
+	  local success, message = map:saveMap()
+	  if success then
+		 print('file created')
+	  else
+		 print('file not created: ' .. message)
+	  end
    elseif key == "f6" then
 	  -- TODO: Load map
+	  local path = "default_181.47793070833.luapill"
+	  map:loadMap(path)
    end
 end
 
