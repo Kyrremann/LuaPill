@@ -15,11 +15,11 @@ function love.load()
 
    map = require "luapill"
    local config = {
-	  tilewidth = 226, -- 256
-	  tileheight = 216/2, -- 352
+	  tilewidth = 226, -- 256, the object is smaller than the tile
+	  tileheight = 216/2, -- 352, the object is smaller than the tile
 	  folder = "Tiles",
 	  defaultTile = 114,
-	  tileIndex = 114 -- 3 -- images
+	  tileIndex = 114,
    }
    map:setup(config)
    SHOW_HELP = false
