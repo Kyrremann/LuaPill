@@ -123,17 +123,13 @@ function love.keypressed(key, scancode, isrepeat)
    elseif key == "lalt" then
 	  LEVELMODE = true
    elseif key == "w" then
-	  local c = map:getCamera()
-	  map:moveCamera(c.x, c.y + 10)
+	  map:moveCamera(0, 10)
    elseif key == "s" then
-	  local c = map:getCamera()
-	  map:moveCamera(c.x, c.y - 10)
+	  map:moveCamera(0, -10)
    elseif key == "a" then
-	  local c = map:getCamera()
-	  map:moveCamera(c.x + 10, c.y)
+	  map:moveCamera(10, 0)
    elseif key == "d" then
-	  local c = map:getCamera()
-	  map:moveCamera(c.x - 10, c.y)
+	  map:moveCamera(-10, 0)
    elseif key == "f5" then
 	  local success, message = map:saveMap()
 	  if success then
@@ -172,8 +168,7 @@ end
 
 function love.mousemoved(x, y, dx, dy, istouch)
    if love.mouse.isDown(2) then
-	  local c = map:getCamera()
-	  map:moveCamera(c.x + dx, c.y + dy)
+	  map:moveCamera(dx, dy)
 	  MOVED_MAP = true
    end
 end

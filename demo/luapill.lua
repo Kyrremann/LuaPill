@@ -220,12 +220,8 @@ end
 
 
 function luapill:moveCamera(x, y)
-   CAMERA.y = y
-   CAMERA.x = x
-end
-
-function luapill:getCamera()
-   return CAMERA
+   CAMERA.y = CAMERA.y + y
+   CAMERA.x = CAMERA.x + x
 end
 
 function luapill:placeTile()
