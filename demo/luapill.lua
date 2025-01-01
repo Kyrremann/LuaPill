@@ -45,16 +45,17 @@ function luapill:draw()
    local map = luapill:getMouseAsMap()
    love.graphics.push()
    love.graphics.translate(CAMERA.x, CAMERA.y)
-   for y, vy in ipairs(MAP) do
-      for x, shape in ipairs(vy) do
+   -- for y, vy in ipairs(MAP) do
+   for y=1, MAP_SIZE do
+      -- for x, shape in ipairs(vy) do
+	  for x=1, MAP_SIZE do
 		 if map.x == x and map.y == y then -- mouse is hovering over this tile
 			drawTile(TILES[TILE_INDEX], map)
 		 else
-			local tile = TILES[shape.tile]
-			if not tile then
-			   tile = TILES[DEFAULT_TILE]
+			local shape = MAP[y][x]
+			if shape then
+			   drawTile(TILES[shape.tile], shape.map)
 			end
-			drawTile(tile, shape.map)
 		 end
       end
    end
@@ -119,10 +120,10 @@ local function initTiles()
    end
 end
 
-local function initMap(width, height)
-   for y=1, height do
+local function initMap(size)
+   for y=1, size do
       MAP[y] = {}
-      for x=1, width do
+      for x=1, size do
 		 MAP[y][x] = createTile(DEFAULT_TILE, { x = x, y = y })
       end
    end
@@ -206,9 +207,10 @@ function luapill:setup(config)
    SORT_FOLDER = config.sortFolder or false
    DEFAULT_TILE = config.defaultTile or 1
    TILE_INDEX = config.tileIndex or 1
+   MAP_SIZE = config.mapSize or 32
 
    initTiles()
-   initMap(30, 30)
+   initMap(MAP_SIZE)
 end
 
 return luapill
