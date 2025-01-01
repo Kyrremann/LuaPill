@@ -107,7 +107,7 @@ local function validateIndex()
 end
 
 local function validateLevel()
-   local max = 4
+   local max = 5
    if TILE_LEVEL < 1 then
       TILE_LEVEL = 1
    elseif TILE_LEVEL > max then
