@@ -33,7 +33,7 @@ local TILE_INDEX = 1
 local function drawTile(tile, map)
    local screen = luapill:mapToScreen(map)
    screen.y = screen.y - (tile:getHeight() - 83) -- magic number
-   
+
    love.graphics.draw(tile,
 					  screen.x * TILESCALE, screen.y * TILESCALE, -- cords
 					  0, -- rotation

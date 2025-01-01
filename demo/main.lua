@@ -83,19 +83,19 @@ end
 function drawHelpScreen()
    love.graphics.setColor(0, 0, 0, 50)
    love.graphics.rectangle("fill",
-				love.graphics.getWidth() * .3, love.graphics.getHeight() * .3,
-				260, 140)
+						   love.graphics.getWidth() * .3, love.graphics.getHeight() * .3,
+						   260, 140)
    love.graphics.setColor(255, 255, 255)
    love.graphics.print("* Move tile with mouse\n" ..
-			"* Left click to place tile\n" ..
-			"* Shift + scroll to zoom in or out\n" ..
-			"  * Or use + and -\n" ..
-			"* Scroll to cycle through tiles\n" ..
-			"  * Or use + and -\n" ..
-			"* Use rigth click and drag to move map\n" ..
-			"  * Or use WASD to move around\n" ..
-			"* Escape to quit\n",
-			love.graphics.getWidth() * .31, love.graphics.getHeight() * .31)
+					   "* Left click to place tile\n" ..
+					   "* Shift + scroll to zoom in or out\n" ..
+					   "  * Or use + and -\n" ..
+					   "* Scroll to cycle through tiles\n" ..
+					   "  * Or use + and -\n" ..
+					   "* Use rigth click and drag to move map\n" ..
+					   "  * Or use WASD to move around\n" ..
+					   "* Escape to quit\n",
+					   love.graphics.getWidth() * .31, love.graphics.getHeight() * .31)
 end
 
 function love.keypressed(key, scancode, isrepeat)
@@ -157,11 +157,11 @@ function love.mousereleased(x, y, button, istouch)
 end
 
 function love.mousemoved(x, y, dx, dy, istouch)
-	if love.mouse.isDown(2) then
-	   local c = map:getCamera()
-	   map:moveCamera(c.x + dx, c.y + dy)
-	   MOVED_MAP = true
-	end
+   if love.mouse.isDown(2) then
+	  local c = map:getCamera()
+	  map:moveCamera(c.x + dx, c.y + dy)
+	  MOVED_MAP = true
+   end
 end
 
 function love.wheelmoved(x, y)
