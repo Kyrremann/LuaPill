@@ -45,9 +45,7 @@ function luapill:draw()
    local map = luapill:getMouseAsMap()
    love.graphics.push()
    love.graphics.translate(CAMERA.x, CAMERA.y)
-   -- for y, vy in ipairs(MAP) do
    for y=1, MAP_SIZE do
-      -- for x, shape in ipairs(vy) do
 	  for x=1, MAP_SIZE do
 		 if map.x == x and map.y == y then -- mouse is hovering over this tile
 			drawTile(TILES[TILE_INDEX], map)
@@ -198,6 +196,15 @@ function luapill:placeTile()
 	end
 
    MAP[map.y][map.x] = createTile(TILE_INDEX, map)
+end
+
+function luapill:deleteTile()
+   local map = luapill:getMouseAsMap()
+   if not MAP[map.y] or not MAP[map.y][map.x] then
+	  return
+	end
+
+   MAP[map.y][map.x] = nil
 end
 
 function luapill:setup(config)

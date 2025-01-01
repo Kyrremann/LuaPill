@@ -148,10 +148,19 @@ function love.mousepressed(x, y, button, istouch)
    end
 end
 
+function love.mousereleased(x, y, button, istouch)
+   if button == 2 and not MOVED_MAP then
+	  map:deleteTile()
+   end
+
+   MOVED_MAP = false
+end
+
 function love.mousemoved(x, y, dx, dy, istouch)
 	if love.mouse.isDown(2) then
 	   local c = map:getCamera()
 	   map:moveCamera(c.x + dx, c.y + dy)
+	   MOVED_MAP = true
 	end
 end
 
