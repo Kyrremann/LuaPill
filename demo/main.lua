@@ -3,6 +3,10 @@
    Author = "Kyrre Havik"
    URL = "https://github.com/Kyrremann/LuaPill"
 ]]
+local love = require "love"
+
+love.keyboard.setKeyRepeat(true)
+love.mouse.setVisible(true)
 
 function love.load()
    require "setup"
@@ -20,7 +24,7 @@ function love.load()
    map:setup(config)
    showHelp = false
    -- move mouse to center
-   love.mouse.setPosition(gr.getWidth() / 2, gr.getHeight() / 2)
+   love.mouse.setPosition(love.graphics.getWidth() / 2, love.graphics.getHeight() / 2)
 end
 
 function love.update(dt)
@@ -32,10 +36,10 @@ function love.draw()
 
    drawSidebar()
 
-   gr.setColor(255, 255, 255)
-   gr.print("Tile: " .. map:getTileIndex(), 10, 10)
-   gr.print("Scale: " .. map:getScale(), 10, 25)
-   gr.print("Press 'h' for keys", gr.getWidth() * .8, 10)
+   love.graphics.setColor(255, 255, 255)
+   love.graphics.print("Tile: " .. map:getTileIndex(), 10, 10)
+   love.graphics.print("Scale: " .. map:getScale(), 10, 25)
+   love.graphics.print("Press 'h' for keys", love.graphics.getWidth() * .8, 10)
 
    if showHelp then
 	  drawHelpScreen()
@@ -45,11 +49,11 @@ end
 function drawSidebar()
    local index = map:getTileIndex()
 
-   gr.setColor(0, 0, 0)
-   gr.rectangle("fill", 0, 0, 200, gr.getHeight())
+   love.graphics.setColor(0, 0, 0)
+   love.graphics.rectangle("fill", 0, 0, 200, love.graphics.getHeight())
 
-   gr.setColor(255, 255, 255)
-   local sh = gr.getHeight() / 2
+   love.graphics.setColor(255, 255, 255)
+   local sh = love.graphics.getHeight() / 2
    local set = {
 	  index - 2,
 	  index - 1,
@@ -69,20 +73,20 @@ function drawSidebar()
 
    local height = map:getTile(1):getHeight() / 4
 
-   gr.draw(map:getTile(set[1]), 64, sh - height * 2.75, 0, .25, .25)
-   gr.draw(map:getTile(set[2]), 46, sh - height * 2, 0, .38, .38)
-   gr.draw(map:getTile(set[3]), 36, sh - height, 0, .5, .5)
-   gr.draw(map:getTile(set[4]), 46, sh + height * .75, 0, .38, .38)
-   gr.draw(map:getTile(set[5]), 64, sh + height * 2.25, 0, .25, .25)
+   love.graphics.draw(map:getTile(set[1]), 64, sh - height * 2.75, 0, .25, .25)
+   love.graphics.draw(map:getTile(set[2]), 46, sh - height * 2, 0, .38, .38)
+   love.graphics.draw(map:getTile(set[3]), 36, sh - height, 0, .5, .5)
+   love.graphics.draw(map:getTile(set[4]), 46, sh + height * .75, 0, .38, .38)
+   love.graphics.draw(map:getTile(set[5]), 64, sh + height * 2.25, 0, .25, .25)
 end
 
 function drawHelpScreen()
-   gr.setColor(0, 0, 0, 50)
-   gr.rectangle("fill",
-				gr.getWidth() * .3, gr.getHeight() * .3,
+   love.graphics.setColor(0, 0, 0, 50)
+   love.graphics.rectangle("fill",
+				love.graphics.getWidth() * .3, love.graphics.getHeight() * .3,
 				260, 140)
-   gr.setColor(255, 255, 255)
-   gr.print("* Move tile with mouse\n" ..
+   love.graphics.setColor(255, 255, 255)
+   love.graphics.print("* Move tile with mouse\n" ..
 			"* Left click to place tile\n" ..
 			"* Shift + scroll to zoom in or out\n" ..
 			"  * Or use + and -\n" ..
@@ -91,7 +95,7 @@ function drawHelpScreen()
 			"* Use rigth click and drag to move map\n" ..
 			"  * Or use WASD to move around\n" ..
 			"* Escape to quit\n",
-			gr.getWidth() * .31, gr.getHeight() * .31)
+			love.graphics.getWidth() * .31, love.graphics.getHeight() * .31)
 end
 
 function love.keypressed(key, scancode, isrepeat)

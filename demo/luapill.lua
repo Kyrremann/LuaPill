@@ -12,6 +12,8 @@
    This notice may not be removed or altered from any source distribution.
 ]]
 
+require "math"
+
 local luapill = {}
 local TILES = {}
 local MAP = {}
@@ -77,7 +79,7 @@ function luapill:screenToMap(screen)
 end
 
 function luapill:getMouseAsMap()
-   return luapill:screenToMap({ x = mo.getX(), y = mo.getY()})
+   return luapill:screenToMap({ x = love.mouse.getX(), y = love.mouse.getY()})
 end
 
 local function validateTileScale()
