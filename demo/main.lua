@@ -38,8 +38,11 @@ function love.draw()
 
    love.graphics.setColor(255, 255, 255)
    love.graphics.print("Tile: " .. map:getTileIndex(), 10, 10)
-   love.graphics.print("Scale: " .. map:getScale(), 10, 25)
+   love.graphics.print("Level: " .. map:getLevel(), 10, 25)
+   love.graphics.print("Scale: " .. map:getScale(), 10, 40)
    love.graphics.print("Press 'h' for keys", love.graphics.getWidth() * .8, 10)
+
+
 
    if showHelp then
 	  drawHelpScreen()
@@ -117,6 +120,8 @@ function love.keypressed(key, scancode, isrepeat)
 	  end
    elseif key == "lshift" then
 	  SCALEMODE = true
+   elseif key == "lalt" then
+	  LEVELMODE = true
    elseif key == "w" then
 	  local c = map:getCamera()
 	  map:moveCamera(c.x, c.y + 10)
@@ -139,6 +144,8 @@ end
 function love.keyreleased(key, scancode)
    if key == "lshift" then
 	  SCALEMODE = false
+   elseif key == "lalt" then
+	  LEVELMODE = false
    end
 end
 
@@ -166,9 +173,17 @@ end
 
 function love.wheelmoved(x, y)
    if y > 0 then
-	  map:shiftTile(1)
+	  if LEVELMODE then
+		 map:shiftLevel(1)
+	  else
+		 map:shiftTile(1)
+	  end
    elseif y < 0 then
-	  map:shiftTile(-1)
+	  if LEVELMODE then
+		 map:shiftLevel(-1)
+	  else
+		 map:shiftTile(-1)
+	  end
    elseif x > 0 then
 	  map:zoomMap(map:getScale() + .2)
    elseif x < 0 then

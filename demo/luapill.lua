@@ -27,18 +27,22 @@ local CAMERA = {
 }
 local TILE_WIDTH_HALF = nil
 local TILE_HEIGHT_HALF = nil
-
 local TILE_INDEX = 1
+local TILE_LEVEL = 1
 
-local function drawTile(tile, map)
-   local screen = luapill:mapToScreen(map)
-   screen.y = screen.y - (tile:getHeight() - 83) -- magic number
+local function drawTile(tiles, screen)
+   for level, tileID in pairs(tiles) do
+	  if tileID then
+	  local tile = TILES[tileID]
+	  local y = screen.y - (tile:getHeight() - 83) - (level * TILE_HEIGHT_HALF) -- magic number
 
-   love.graphics.draw(tile,
-					  screen.x * TILESCALE, screen.y * TILESCALE, -- cords
-					  0, -- rotation
-					  TILESCALE, TILESCALE -- scale
-   )
+	  love.graphics.draw(tile,
+						 screen.x * TILESCALE, y * TILESCALE, -- cords
+						 0, -- rotation
+						 TILESCALE, TILESCALE -- scale
+	  )
+	  end
+   end
 end
 
 function luapill:draw()
@@ -46,14 +50,20 @@ function luapill:draw()
    love.graphics.push()
    love.graphics.translate(CAMERA.x, CAMERA.y)
    for y=1, MAP_SIZE do
-	  for x=1, MAP_SIZE do
+	  for x = 1, MAP_SIZE do
+		 local screen = luapill:mapToScreen({ x = x, y = y })
+		 local tiles = MAP[y][x]
 		 if mouse.x == x and mouse.y == y then
-			drawTile(TILES[TILE_INDEX], mouse)
-		 else
-			local shape = MAP[y][x]
-			if shape then
-			   drawTile(TILES[shape.tile], shape.map)
+			local tmp = MAP[y][x]
+			tiles = {}
+			for level, tile in pairs(tmp) do
+			   tiles[level] = tile
 			end
+			tiles[TILE_LEVEL] = TILE_INDEX
+		 end
+
+		 if tiles then
+			drawTile(tiles, screen)
 		 end
       end
    end
@@ -96,12 +106,13 @@ local function validateIndex()
    end
 end
 
-local function createTile(tile, map)
-   return {
-      tile = tile,
-      map = map,
-      locked = false
-   }
+local function validateLevel()
+   local max = 4
+   if TILE_LEVEL < 1 then
+      TILE_LEVEL = 1
+   elseif TILE_LEVEL > max then
+      TILE_LEVEL = max
+   end
 end
 
 local function initTiles()
@@ -122,7 +133,7 @@ local function initMap(size)
    for y=1, size do
       MAP[y] = {}
       for x=1, size do
-		 MAP[y][x] = createTile(DEFAULT_TILE, { x = x, y = y })
+		 MAP[y][x] = { DEFAULT_TILE }
       end
    end
 end
@@ -156,6 +167,11 @@ function luapill:shiftTile(index)
    validateIndex()
 end
 
+function luapill:shiftLevel(index)
+   TILE_LEVEL = TILE_LEVEL + index
+   validateLevel()
+end
+
 function luapill:loadMap(path)
    if love.filesystem.isFile(path) then
       -- TODO: Implement loading of maps
@@ -180,6 +196,11 @@ function luapill:getTileIndex()
    return TILE_INDEX
 end
 
+function luapill:getLevel()
+   return TILE_LEVEL
+end
+
+
 function luapill:moveCamera(x, y)
    CAMERA.y = y
    CAMERA.x = x
@@ -195,7 +216,7 @@ function luapill:placeTile()
 	  return
 	end
 
-   MAP[map.y][map.x] = createTile(TILE_INDEX, map)
+   MAP[map.y][map.x][TILE_LEVEL] = TILE_INDEX
 end
 
 function luapill:deleteTile()
@@ -204,7 +225,7 @@ function luapill:deleteTile()
 	  return
 	end
 
-   MAP[map.y][map.x] = nil
+   MAP[map.y][map.x][TILE_LEVEL] = nil
 end
 
 function luapill:setup(config)
