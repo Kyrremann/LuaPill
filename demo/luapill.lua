@@ -31,7 +31,7 @@ local TILE_HEIGHT_HALF = nil
 local TILE_INDEX = 1
 
 local function drawTile(tile, map)
-   screen = luapill:mapToScreen(map)
+   local screen = luapill:mapToScreen(map)
    screen.y = screen.y - (tile:getHeight() - 83) -- magic number
    
    love.graphics.draw(tile,
@@ -42,7 +42,6 @@ local function drawTile(tile, map)
 end
 
 function luapill:draw()
-   local screen = {}
    local map = luapill:getMouseAsMap()
    love.graphics.push()
    love.graphics.translate(CAMERA.x, CAMERA.y)
@@ -108,7 +107,7 @@ end
 
 local function initTiles()
    local files = love.filesystem.getDirectoryItems(FOLDER)
-   for k, file in ipairs(files) do
+   for _, file in ipairs(files) do
       table.insert(TILES, love.graphics.newImage(FOLDER .. "/" .. file))
    end
    if SORT_FOLDER then
@@ -131,8 +130,8 @@ end
 
 function luapill:saveMap(path)
    local output = "TILE_INDEX;X;Y;LOCKED"
-   for y, vy in ipairs(MAP) do
-      for x, tile in ipairs(vy) do
+   for _, vy in ipairs(MAP) do
+      for _, tile in ipairs(vy) do
 		 output = string.format("%s\n%d;%d;%d;%s",
 								output,
 								tile.tile,
@@ -140,7 +139,7 @@ function luapill:saveMap(path)
 								tile.locked)
       end
    end
-   
+
    if not path then
       path = "default_" .. love.timer.getTime() .. ".luapill"
    end
@@ -160,7 +159,7 @@ end
 
 function luapill:loadMap(path)
    if love.filesystem.isFile(path) then
-      
+      -- TODO: Implement loading of maps
    else
       print("No such file with path: " .. path)
    end

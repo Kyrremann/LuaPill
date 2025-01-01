@@ -14,7 +14,7 @@ function love.load()
    SCALEMODE = false
 
    map = require "luapill"
-   config = {
+   local config = {
 	  tilewidth = 226, -- 256
 	  tileheight = 216/2, -- 352
 	  folder = "Tiles",
