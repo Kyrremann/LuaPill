@@ -170,6 +170,8 @@ function love.mousemoved(x, y, dx, dy, istouch)
    if love.mouse.isDown(2) then
 	  map:moveCamera(dx, dy)
 	  MOVED_MAP = true
+   elseif love.mouse.isDown(1) then
+	  map:placeTile()
    end
 end
 
