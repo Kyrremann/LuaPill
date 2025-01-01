@@ -42,13 +42,13 @@ local function drawTile(tile, map)
 end
 
 function luapill:draw()
-   local map = luapill:getMouseAsMap()
+   local mouse = luapill:getMouseAsMap()
    love.graphics.push()
    love.graphics.translate(CAMERA.x, CAMERA.y)
    for y=1, MAP_SIZE do
 	  for x=1, MAP_SIZE do
-		 if map.x == x and map.y == y then -- mouse is hovering over this tile
-			drawTile(TILES[TILE_INDEX], map)
+		 if mouse.x == x and mouse.y == y then
+			drawTile(TILES[TILE_INDEX], mouse)
 		 else
 			local shape = MAP[y][x]
 			if shape then
