@@ -93,14 +93,14 @@ function luapill:getMouseAsMap()
    return luapill:screenToMap({ x = love.mouse.getX(), y = love.mouse.getY()})
 end
 
-local function validateTileScale()
+function luapill:zoomMap(scale)
+   TILESCALE = scale
+
    if TILESCALE < .2 then
       TILESCALE = .2
    elseif TILESCALE > 2 then
       TILESCALE = 2
    end
-end
-
 end
 
 local function initTiles()
@@ -147,10 +147,6 @@ function luapill:saveMap(path)
    return love.filesystem.write(path, output)
 end
 
-function luapill:zoomMap(scale)
-   TILESCALE = scale
-   validateTileScale()
-end
 function luapill:loadMap(path)
    initMap(MAP_SIZE, nil)
 
