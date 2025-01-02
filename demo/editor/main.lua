@@ -11,6 +11,8 @@ love.mouse.setVisible(true)
 function love.load()
    SHOW_HELP = false
    SCALEMODE = false
+   TILE_INDEX = 114
+   TILE_LEVEL = 1
 
    PILL = require "luapill"
    local config = {
@@ -18,7 +20,6 @@ function love.load()
 	  tileheight = 216/2, -- 352, the object is smaller than the tile
 	  folder = "Tiles",
 	  defaultTile = 114,
-	  tileIndex = 114,
    }
    PILL:setup(config)
 
@@ -31,13 +32,25 @@ end
 
 function love.draw()
    love.graphics.setColor(255, 255, 255)
-   PILL:draw()
+
+   local mouse = PILL:getMouseAsMap()
+
+   local extras = {
+	  [mouse.y] = {
+		 [mouse.x] = {
+			index = TILE_INDEX,
+			level = TILE_LEVEL
+		 }
+	  }
+   }
+
+   PILL:draw(extras)
 
    drawSidebar()
 
    love.graphics.setColor(255, 255, 255)
-   love.graphics.print("Tile: " .. PILL:getTileIndex(), 10, 10)
-   love.graphics.print("Level: " .. PILL:getLevel(), 10, 25)
+   love.graphics.print("Tile: " .. TILE_INDEX, 10, 10)
+   love.graphics.print("Level: " .. TILE_LEVEL, 10, 25)
    love.graphics.print("Scale: " .. PILL:getScale(), 10, 40)
    love.graphics.print("Press 'h' for keys", love.graphics.getWidth() * .8, 10)
 
@@ -49,21 +62,21 @@ function love.draw()
 end
 
 function drawSidebar()
-   local index = PILL:getTileIndex()
-
    love.graphics.setColor(0, 0, 0)
    love.graphics.rectangle("fill", 0, 0, 200, love.graphics.getHeight())
 
    love.graphics.setColor(255, 255, 255)
    local sh = love.graphics.getHeight() / 2
    local set = {
-	  index - 2,
-	  index - 1,
-	  index,
-	  index + 1,
-	  index + 2
+	  TILE_INDEX - 2,
+	  TILE_INDEX - 1,
+	  TILE_INDEX,
+	  TILE_INDEX + 1,
+	  TILE_INDEX + 2
    }
 
+   -- TODO: This could be done when your scrolling through the tiles
+   --       instead of every frame
    local size = PILL:getTileCount()
    for v, k in ipairs(set) do
 	  if k == 0 then set[v] = size
@@ -109,13 +122,13 @@ function love.keypressed(key, scancode, isrepeat)
 	  if SCALEMODE then
 		 PILL:zoomMap(PILL:getScale() + .2)
 	  else
-		 PILL:shiftTile(1)
+		 shiftTileIndex(1)
 	  end
    elseif key == "-" then
 	  if SCALEMODE then
 		 PILL:zoomMap(PILL:getScale() - .2)
 	  else
-		 PILL:shiftTile(-1)
+		 shiftTileIndex(-1)
 	  end
    elseif key == "lshift" then
 	  SCALEMODE = true
@@ -153,13 +166,13 @@ end
 
 function love.mousepressed(x, y, button, istouch)
    if button == 1 then
-	  PILL:placeTile()
+	  placeTile()
    end
 end
 
 function love.mousereleased(x, y, button, istouch)
    if button == 2 and not MOVED_MAP then
-	  PILL:deleteTile()
+	  deleteTile()
    end
 
    MOVED_MAP = false
@@ -170,26 +183,62 @@ function love.mousemoved(x, y, dx, dy, istouch)
 	  PILL:moveCamera(dx, dy)
 	  MOVED_MAP = true
    elseif love.mouse.isDown(1) then
-	  PILL:placeTile()
+	  placeTile()
    end
 end
 
 function love.wheelmoved(x, y)
    if y > 0 then
 	  if LEVELMODE then
-		 PILL:shiftLevel(1)
+		 shiftLevel(1)
 	  else
-		 PILL:shiftTile(1)
+		 shiftTileIndex(1)
 	  end
    elseif y < 0 then
 	  if LEVELMODE then
-		 PILL:shiftLevel(-1)
+		 shiftLevel(-1)
 	  else
-		 PILL:shiftTile(-1)
+		 shiftTileIndex(-1)
 	  end
    elseif x > 0 then
 	  PILL:zoomMap(PILL:getScale() + .2)
    elseif x < 0 then
 	  PILL:zoomMap(PILL:getScale() - .2)
+   end
+end
+
+function placeTile()
+   local tile = PILL:getMouseAsMap()
+   tile.index = TILE_INDEX
+   tile.level = TILE_LEVEL
+
+   PILL:placeTile(tile)
+end
+
+function deleteTile()
+   local tile = PILL:getMouseAsMap()
+   tile.level = TILE_LEVEL
+
+   PILL:deleteTile(tile)
+end
+
+function shiftTileIndex(index)
+   TILE_INDEX = TILE_INDEX + index
+
+   if TILE_INDEX < 1 then
+      TILE_INDEX = PILL:getTileCount()
+   elseif TILE_INDEX > PILL:getTileCount() then
+      TILE_INDEX = 1
+   end
+end
+
+function shiftLevel(index)
+   TILE_LEVEL = TILE_LEVEL + index
+
+   local max = 5
+   if TILE_LEVEL < 1 then
+      TILE_LEVEL = 1
+   elseif TILE_LEVEL > max then
+      TILE_LEVEL = max
    end
 end

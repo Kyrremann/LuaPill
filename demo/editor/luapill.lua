@@ -20,7 +20,6 @@ local MAP = {}
 local TILESCALE = 1
 local FOLDER = nil
 local SORT_FOLDER = false
-local DEFAULT_TILE = nil
 local CAMERA = {
    x = love.graphics.getWidth() / 2,
    y = 0
@@ -45,21 +44,24 @@ local function drawTile(tiles, screen)
    end
 end
 
-function luapill:draw()
-   local mouse = luapill:getMouseAsMap()
+function luapill:draw(extras)
    love.graphics.push()
    love.graphics.translate(CAMERA.x, CAMERA.y)
+
    for y=1, MAP_SIZE do
 	  for x = 1, MAP_SIZE do
 		 local screen = luapill:mapToScreen({ x = x, y = y })
 		 local tiles = MAP[y][x]
-		 if mouse.x == x and mouse.y == y then
-			local tmp = MAP[y][x]
-			tiles = {}
-			for level, tile in pairs(tmp) do
-			   tiles[level] = tile
-			end
-			tiles[TILE_LEVEL] = TILE_INDEX
+
+		 if extras[y] and extras[y][x] then
+		 -- if mouse.x == x and mouse.y == y then
+		 	local tmp = MAP[y][x]
+		 	tiles = {}
+		 	for level, tile in pairs(tmp) do
+		 	   tiles[level] = tile
+		 	end
+
+		 	tiles[extras[y][x].level] = extras[y][x].index
 		 end
 
 		 if tiles then
@@ -67,6 +69,7 @@ function luapill:draw()
 		 end
       end
    end
+
    love.graphics.pop()
 end
 
@@ -98,34 +101,17 @@ local function validateTileScale()
    end
 end
 
-local function validateIndex()
-   if TILE_INDEX < 1 then
-      TILE_INDEX = #TILES
-   elseif TILE_INDEX > #TILES then
-      TILE_INDEX = 1
-   end
-end
-
-local function validateLevel()
-   local max = 5
-   if TILE_LEVEL < 1 then
-      TILE_LEVEL = 1
-   elseif TILE_LEVEL > max then
-      TILE_LEVEL = max
-   end
 end
 
 local function initTiles()
    local files = love.filesystem.getDirectoryItems(FOLDER)
+
    for _, file in ipairs(files) do
       table.insert(TILES, love.graphics.newImage(FOLDER .. "/" .. file))
    end
+
    if SORT_FOLDER then
       table.sort(TILES)
-   end
-
-   if not DEFAULT_TILE then
-      DEFAULT_TILE = #TILES
    end
 end
 
@@ -165,17 +151,6 @@ function luapill:zoomMap(scale)
    TILESCALE = scale
    validateTileScale()
 end
-
-function luapill:shiftTile(index)
-   TILE_INDEX = TILE_INDEX + index
-   validateIndex()
-end
-
-function luapill:shiftLevel(index)
-   TILE_LEVEL = TILE_LEVEL + index
-   validateLevel()
-end
-
 function luapill:loadMap(path)
    initMap(MAP_SIZE, nil)
 
@@ -189,7 +164,6 @@ function luapill:loadMap(path)
 		 level = tonumber(level)
 
 		 if x then -- skips header line
-			print(x, y, tile, level)
 			MAP[y][x][level] = tile
 		 end
 	  end
@@ -210,36 +184,25 @@ function luapill:getScale()
    return TILESCALE
 end
 
-function luapill:getTileIndex()
-   return TILE_INDEX
-end
-
-function luapill:getLevel()
-   return TILE_LEVEL
-end
-
-
 function luapill:moveCamera(x, y)
    CAMERA.y = CAMERA.y + y
    CAMERA.x = CAMERA.x + x
 end
 
-function luapill:placeTile()
-   local map = luapill:getMouseAsMap()
-   if not MAP[map.y] or not MAP[map.y][map.x] then
+function luapill:placeTile(tile)
+   if not MAP[tile.y] or not MAP[tile.y][tile.x] then
 	  return
 	end
 
-   MAP[map.y][map.x][TILE_LEVEL] = TILE_INDEX
+   MAP[tile.y][tile.x][tile.level] = tile.index
 end
 
-function luapill:deleteTile()
-   local map = luapill:getMouseAsMap()
-   if not MAP[map.y] or not MAP[map.y][map.x] then
+function luapill:deleteTile(tile)
+   if not MAP[tile.y] or not MAP[tile.y][tile.x] then
 	  return
 	end
 
-   MAP[map.y][map.x][TILE_LEVEL] = nil
+   MAP[tile.y][tile.x][tile.level] = nil
 end
 
 function luapill:setup(config)
@@ -247,12 +210,10 @@ function luapill:setup(config)
    TILE_HEIGHT_HALF = config.tileheight / 2
    FOLDER = config.folder
    SORT_FOLDER = config.sortFolder or false
-   DEFAULT_TILE = config.defaultTile or 1
-   TILE_INDEX = config.tileIndex or 1
    MAP_SIZE = config.mapSize or 32
 
    initTiles()
-   initMap(MAP_SIZE, DEFAULT_TILE)
+   initMap(MAP_SIZE, config.defaultTile or 1)
 end
 
 return luapill
