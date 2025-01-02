@@ -26,8 +26,6 @@ local CAMERA = {
 }
 local TILE_WIDTH_HALF = nil
 local TILE_HEIGHT_HALF = nil
-local TILE_INDEX = 1
-local TILE_LEVEL = 1
 
 local function drawTile(tiles, screen)
    for level, tileID in pairs(tiles) do
