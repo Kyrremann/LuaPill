@@ -13,6 +13,7 @@ function love.load()
    SCALEMODE = false
    TILE_INDEX = 114
    TILE_LEVEL = 1
+   SIDEBAR_SET = { 112, 113, 114, 115, 116 }
 
    PILL = require "luapill"
    local config = {
@@ -67,32 +68,13 @@ function drawSidebar()
 
    love.graphics.setColor(255, 255, 255)
    local sh = love.graphics.getHeight() / 2
-   local set = {
-	  TILE_INDEX - 2,
-	  TILE_INDEX - 1,
-	  TILE_INDEX,
-	  TILE_INDEX + 1,
-	  TILE_INDEX + 2
-   }
-
-   -- TODO: This could be done when your scrolling through the tiles
-   --       instead of every frame
-   local size = PILL:getTileCount()
-   for v, k in ipairs(set) do
-	  if k == 0 then set[v] = size
-	  elseif k == -1 then set[v] = size - 1
-	  elseif k == size + 1 then set[v] = 1
-	  elseif k == size + 2 then set[v] = 2
-	  end
-   end
-
    local height = PILL:getTile(1):getHeight() / 4
 
-   love.graphics.draw(PILL:getTile(set[1]), 64, sh - height * 2.75, 0, .25, .25)
-   love.graphics.draw(PILL:getTile(set[2]), 46, sh - height * 2, 0, .38, .38)
-   love.graphics.draw(PILL:getTile(set[3]), 36, sh - height, 0, .5, .5)
-   love.graphics.draw(PILL:getTile(set[4]), 46, sh + height * .75, 0, .38, .38)
-   love.graphics.draw(PILL:getTile(set[5]), 64, sh + height * 2.25, 0, .25, .25)
+   love.graphics.draw(PILL:getTile(SIDEBAR_SET[1]), 64, sh - height * 2.75, 0, .25, .25)
+   love.graphics.draw(PILL:getTile(SIDEBAR_SET[2]), 46, sh - height * 2, 0, .38, .38)
+   love.graphics.draw(PILL:getTile(SIDEBAR_SET[3]), 36, sh - height, 0, .5, .5)
+   love.graphics.draw(PILL:getTile(SIDEBAR_SET[4]), 46, sh + height * .75, 0, .38, .38)
+   love.graphics.draw(PILL:getTile(SIDEBAR_SET[5]), 64, sh + height * 2.25, 0, .25, .25)
 end
 
 function drawHelpScreen()
@@ -226,9 +208,26 @@ function shiftTileIndex(index)
    TILE_INDEX = TILE_INDEX + index
 
    if TILE_INDEX < 1 then
-      TILE_INDEX = PILL:getTileCount()
+	  TILE_INDEX = PILL:getTileCount()
    elseif TILE_INDEX > PILL:getTileCount() then
-      TILE_INDEX = 1
+	  TILE_INDEX = 1
+   end
+
+   SIDEBAR_SET = {
+	  TILE_INDEX - 2,
+	  TILE_INDEX - 1,
+	  TILE_INDEX,
+	  TILE_INDEX + 1,
+	  TILE_INDEX + 2
+   }
+
+   local size = PILL:getTileCount()
+   for v, k in ipairs(SIDEBAR_SET) do
+	  if k == 0 then SIDEBAR_SET[v] = size
+	  elseif k == -1 then SIDEBAR_SET[v] = size - 1
+	  elseif k == size + 1 then SIDEBAR_SET[v] = 1
+	  elseif k == size + 2 then SIDEBAR_SET[v] = 2
+	  end
    end
 end
 
