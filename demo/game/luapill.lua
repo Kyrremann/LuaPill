@@ -180,7 +180,11 @@ function luapill:getTileCount()
 end
 
 function luapill:getScale()
-	return TILESCALE
+    return TILESCALE
+end
+
+function luapill:getMap()
+   return MAP
 end
 
 function luapill:moveCamera(x, y)
